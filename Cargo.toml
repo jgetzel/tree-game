@@ -9,6 +9,7 @@ edition = "2021"
 bevy = { version = "0.9.1" }
 bevy_rapier2d = "0.20.0"
 bevy-inspector-egui = "0.17.0"
+lerp = "0.4.0"
 
 # Enable a small amount of optimization in debug mode
 [profile.dev]

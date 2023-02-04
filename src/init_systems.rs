@@ -1,0 +1,148 @@
+use crate::assets::SpriteEnum::HouseFront;
+use crate::assets::{AppState, GameAssets, SpriteEnum};
+use crate::camera::MainCamera;
+use crate::player::{Flippable, Player, TRUNK_FRICTION};
+use bevy::core_pipeline::clear_color::ClearColorConfig;
+use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
+
+const TRUNK_COLLIDER_RADIUS: f32 = 100.;
+const TRUNK_COLLIDER_Y_OFFSET: f32 = -100.;
+
+pub const TRUNK_SCALE: f32 = 0.1;
+pub const HOUSE_FRONT_SCALE: f32 = 0.15;
+
+const CAMERA_LAYER: f32 = 100.;
+const CAMERA_SCALE: f32 = 0.75;
+
+pub struct EnvironmentInitPlugin;
+
+impl Plugin for EnvironmentInitPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_system_set(
+            SystemSet::on_enter(AppState::InGame)
+                .with_system(init_player)
+                .with_system(init_camera)
+                .with_system(init_background),
+        );
+
+        if app.is_plugin_added::<RapierPhysicsPlugin>() {
+            app.add_startup_system(init_gravity);
+        }
+    }
+}
+
+#[derive(Component)]
+pub struct AutoSizeOnY;
+
+#[derive(Component)]
+pub struct AutoSortOnY;
+
+#[derive(Component, Copy, Clone)]
+pub struct YOffset(pub f32);
+
+fn init_player(mut commands: Commands, assets: Res<GameAssets>) {
+    commands
+        .spawn((
+            SpriteBundle {
+                texture: assets.map.get(&SpriteEnum::TrunkJr).unwrap().clone(),
+                ..default()
+            },
+            Player,
+            Flippable { right_facing: true },
+            AutoSizeOnY,
+            AutoSortOnY,
+            Velocity::default(),
+            LockedAxes::ROTATION_LOCKED,
+            Damping {
+                linear_damping: TRUNK_FRICTION,
+                ..default()
+            },
+            RigidBody::Dynamic,
+        ))
+        .insert(SpatialBundle {
+            transform: Transform {
+                scale: Vec3::ONE * TRUNK_SCALE,
+                ..default()
+            },
+            ..default()
+        })
+        .with_children(|p| {
+            p.spawn(Collider::ball(TRUNK_COLLIDER_RADIUS))
+                .insert(YOffset(TRUNK_COLLIDER_Y_OFFSET))
+                .insert(SpatialBundle {
+                    transform: Transform::from_xyz(0., TRUNK_COLLIDER_Y_OFFSET, 0.),
+                    ..default()
+                });
+            p.spawn(SpriteBundle {
+                texture: assets.map.get(&SpriteEnum::DebugCircle).unwrap().clone(),
+                transform: Transform {
+                    scale: Vec3::ONE * 0.5,
+                    translation: Vec3::new(0., 0., 1.),
+                    ..default()
+                },
+                ..default()
+            });
+        });
+}
+
+fn init_background(mut commands: Commands, assets: Res<GameAssets>) {
+    commands
+        .spawn(SpriteBundle {
+            texture: assets.map.get(&HouseFront).unwrap().clone(),
+            transform: Transform {
+                scale: Vec3::ONE * HOUSE_FRONT_SCALE,
+                translation: Vec3::new(0., 0., -500.),
+                ..default()
+            },
+            ..default()
+        })
+        .with_children(|p| {
+            p.spawn(Collider::ball(100.))
+                .insert(TransformBundle::from(Transform {
+                    translation: Vec3::new(-222., 4., 0.) / HOUSE_FRONT_SCALE,
+                    scale: Vec3::new(2., 1., 1.),
+                    ..default()
+                }));
+            p.spawn(Collider::ball(100.))
+                .insert(TransformBundle::from(Transform {
+                    translation: Vec3::new(-532., -60., 0.) / HOUSE_FRONT_SCALE,
+                    scale: Vec3::new(2., 1., 1.),
+                    ..default()
+                }));
+            p.spawn(Collider::convex_polyline(vec![
+                Vect::new(132., -13.),
+                Vect::new(464., -155.),
+                Vect::new(618., -46.),
+                Vect::new(716., -80.),
+                Vect::new(715., 270.)
+            ]).unwrap());
+            p.spawn(Collider::polyline(vec![
+                Vect::new(-716., 69.),
+                Vect::new(-715., -256.),
+                Vect::new(713., -256.),
+                Vect::new(713., 69.)
+            ], Some(vec![[0,1], [1,2], [2,3], [3,0]])));
+        });
+}
+
+fn init_camera(mut commands: Commands) {
+    commands.spawn((
+        Camera2dBundle {
+            transform: Transform {
+                translation: Vec3::new(0., 0., CAMERA_LAYER),
+                scale: Vec3::ONE * CAMERA_SCALE,
+                ..default()
+            },
+            camera_2d: Camera2d {
+                clear_color: ClearColorConfig::Custom(Color::rgb(0., 0., 0.)),
+            },
+            ..default()
+        },
+        MainCamera,
+    ));
+}
+
+fn init_gravity(mut config: ResMut<RapierConfiguration>) {
+    config.gravity = Vec2::new(0., 0.);
+}

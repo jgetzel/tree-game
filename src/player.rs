@@ -1,4 +1,4 @@
-use crate::environment_init::{AutoSizeOnY, AutoSortOnY, YOffset, TRUNK_SCALE};
+use crate::init_systems::{AutoSizeOnY, AutoSortOnY, TRUNK_SCALE, YOffset};
 use crate::keyboard_input::PlayerInput;
 use bevy::prelude::*;
 use bevy_rapier2d::geometry::Collider;
@@ -8,10 +8,15 @@ pub const TRUNK_ACCEL: f32 = 1000.;
 pub const TRUNK_MAX_SPEED: f32 = 100.;
 pub const TRUNK_FRICTION: f32 = 5.;
 
-pub const Y_SCALE_FACTOR: f32 = 0.002;
-
 #[derive(Component)]
 pub struct Player;
+
+#[derive(Component)]
+pub struct Flippable {
+    pub right_facing: bool
+}
+
+const DEADZONE: f32 = 0.15;
 
 pub fn move_player(
     mut query: Query<&mut Velocity, With<Player>>,
@@ -31,39 +36,13 @@ pub fn move_player(
     }
 }
 
-pub fn update_size_on_y(mut query: Query<(&mut Transform, &Children), With<AutoSizeOnY>>) {
-    for (mut trans, children) in query.iter_mut() {
-        trans.scale = Vec3::ONE * TRUNK_SCALE * (1. - trans.translation.y * Y_SCALE_FACTOR);
-    }
-}
-
-pub fn auto_sort_on_y(mut query: Query<(&mut Transform), With<AutoSortOnY>>) {
-    for mut trans in query.iter_mut() {
-        trans.translation.z = -trans.translation.y / 100.;
-    }
-}
-
-pub fn reinsert_colliders(
-    mut query: Query<(Entity, &Children, &Transform), With<RigidBody>>,
-    c_query: Query<(Entity, &Collider, &YOffset), Without<RigidBody>>,
-    mut commands: Commands,
+pub fn flip_flippables(
+    mut query: Query<(&Velocity, &mut Sprite, &Flippable)>,
 ) {
-    for (parent, children, p_trans) in query.iter_mut() {
-        for &child in children.iter() {
-            if let Ok((entity, collider, &y_off)) = c_query.get(child) {
-                commands.entity(entity).despawn();
-                commands.entity(parent).with_children(|p| {
-                    p.spawn((
-                        collider.clone(),
-                        TransformBundle::from(Transform {
-                            translation: Vec3::new(0., y_off.0, 0.) * p_trans.scale * 10.,
-                            scale: Vec3::new(3., 1., 1.),
-                            ..default()
-                        }),
-                        y_off,
-                    ));
-                });
-            }
+    for (vel, mut sprite, flip) in query.iter_mut() {
+        if vel.linvel.x.abs() > DEADZONE {
+            let flip_inv = if flip.right_facing { 1. } else { -1. };
+            sprite.flip_x = vel.linvel.x * flip_inv < 0.
         }
     }
 }

@@ -8,11 +8,6 @@ pub enum AppState {
     InGame,
 }
 
-#[derive(PartialEq, Eq, Hash)]
-pub enum SpriteEnum {
-    TrunkJr,
-}
-
 #[derive(Default, Resource)]
 pub struct GameAssets {
     pub map: HashMap<SpriteEnum, Handle<Image>>,
@@ -35,6 +30,13 @@ impl Plugin for AssetLoaderPlugin {
 #[derive(Default, Resource)]
 pub struct AssetsLoading(Vec<HandleUntyped>);
 
+#[derive(PartialEq, Eq, Hash)]
+pub enum SpriteEnum {
+    TrunkJr,
+    HouseFront,
+    DebugCircle
+}
+
 pub fn load_assets(
     mut assets: ResMut<GameAssets>,
     mut loading: ResMut<AssetsLoading>,
@@ -43,6 +45,14 @@ pub fn load_assets(
     assets.map.insert(
         SpriteEnum::TrunkJr,
         asset_server.load("sprites/trunk-jr.png"),
+    );
+    assets.map.insert(
+        SpriteEnum::HouseFront,
+        asset_server.load("sprites/house_front.png"),
+    );
+    assets.map.insert(
+        SpriteEnum::DebugCircle,
+        asset_server.load("sprites/debug_circle.png")
     );
 
     for (_, asset) in assets.map.iter() {
