@@ -3,6 +3,7 @@ use crate::init_systems::{EnvironmentInitPlugin, YOffset};
 use crate::keyboard_input::KeyboardInputPlugin;
 use bevy::app::PluginGroupBuilder;
 use bevy::prelude::*;
+use bevy_embedded_assets::EmbeddedAssetPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_rapier2d::prelude::{NoUserData, RapierPhysicsPlugin};
 use bevy_rapier2d::render::RapierDebugRenderPlugin;
@@ -20,7 +21,8 @@ mod utils;
 fn main() {
     let mut app = App::new();
 
-    app.add_plugins(DefaultPlugins)
+    app.add_plugins(DefaultPlugins
+        .build().add_before::<AssetPlugin, _>(EmbeddedAssetPlugin))
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.))
         .add_plugins(DebugPlugins)
         .add_plugin(AssetLoaderPlugin)

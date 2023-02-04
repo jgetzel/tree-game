@@ -37,6 +37,9 @@ pub enum SpriteEnum {
     HouseFrontHouse,
     HouseFrontTree1,
     HouseFrontTree2,
+    HouseInside,
+    LadyIdle,
+    PillBug,
     DebugCircle
 }
 
@@ -64,6 +67,18 @@ pub fn load_assets(
     assets.map.insert(
         SpriteEnum::HouseFrontTree2,
         asset_server.load("sprites/house_front_tree_2.png")
+    );
+    assets.map.insert(
+        SpriteEnum::HouseInside,
+        asset_server.load("sprites/house_inside.png")
+    );
+    assets.map.insert(
+        SpriteEnum::LadyIdle,
+        asset_server.load("sprites/lady_idle.png")
+    );
+    assets.map.insert(
+        SpriteEnum::PillBug,
+        asset_server.load("sprites/pill_bug.png")
     );
     assets.map.insert(
         SpriteEnum::DebugCircle,

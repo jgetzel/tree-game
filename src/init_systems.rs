@@ -75,6 +75,8 @@ fn init_player(mut commands: Commands, assets: Res<GameAssets>) {
                     transform: Transform::from_xyz(0., TRUNK_COLLIDER_Y_OFFSET, 0.),
                     ..default()
                 });
+
+            #[cfg(debug_assertions)]
             p.spawn(SpriteBundle {
                 texture: assets.map.get(&SpriteEnum::DebugCircle).unwrap().clone(),
                 transform: Transform {
@@ -83,8 +85,7 @@ fn init_player(mut commands: Commands, assets: Res<GameAssets>) {
                     ..default()
                 },
                 ..default()
-            })
-            .insert(AutoSortOnY);
+            });
         });
 }
 
