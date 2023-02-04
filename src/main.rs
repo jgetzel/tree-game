@@ -5,9 +5,8 @@ use bevy::app::PluginGroupBuilder;
 use bevy::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_rapier2d::prelude::{NoUserData, RapierPhysicsPlugin};
-use bevy_rapier2d::rapier::prelude::{Collider, ColliderHandle};
 use bevy_rapier2d::render::RapierDebugRenderPlugin;
-use crate::player::{auto_sort_on_y, move_player, update_size_on_y};
+use crate::player::{auto_sort_on_y, move_player, reinsert_colliders, update_size_on_y};
 
 mod assets;
 mod camera;
@@ -27,7 +26,8 @@ fn main() {
 
     app.add_system(move_player)
         .add_system(update_size_on_y)
-        .add_system(auto_sort_on_y);
+        .add_system(auto_sort_on_y)
+        .add_system(reinsert_colliders);
     
     app.run();
 }

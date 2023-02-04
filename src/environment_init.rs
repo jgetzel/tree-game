@@ -21,7 +21,7 @@ impl Plugin for EnvironmentInitPlugin {
             SystemSet::on_enter(AppState::InGame)
                 .with_system(init_player)
                 .with_system(init_camera)
-                .with_system(init_ball)
+                .with_system(init_ball),
         );
 
         if app.is_plugin_added::<RapierPhysicsPlugin>() {
@@ -36,15 +36,15 @@ pub struct AutoSizeOnY;
 #[derive(Component)]
 pub struct AutoSortOnY;
 
+#[derive(Component, Copy, Clone)]
+pub struct YOffset(pub f32);
+
+
 fn init_player(mut commands: Commands, assets: Res<GameAssets>) {
     commands
         .spawn((
             SpriteBundle {
                 texture: assets.map.get(&SpriteEnum::TrunkJr).unwrap().clone(),
-                transform: Transform {
-                    scale: Vec3::ONE * TRUNK_SCALE,
-                    ..default()
-                },
                 ..default()
             },
             Player,
@@ -58,14 +58,20 @@ fn init_player(mut commands: Commands, assets: Res<GameAssets>) {
             },
             RigidBody::Dynamic,
         ))
+        .insert(SpatialBundle {
+            transform: Transform {
+                scale: Vec3::ONE * TRUNK_SCALE,
+                ..default()
+            },
+            ..default()
+        })
         .with_children(|p| {
             p.spawn(Collider::ball(TRUNK_COLLIDER_RADIUS))
-                .insert(TransformBundle::from(Transform::from_xyz(
-                    0.,
-                    TRUNK_COLLIDER_Y_OFFSET,
-                    0.,
-                )))
-                .insert(ColliderMassProperties::Density(1.0));
+                .insert(YOffset(TRUNK_COLLIDER_Y_OFFSET))
+                .insert(SpatialBundle {
+                    transform: Transform::from_xyz(0., TRUNK_COLLIDER_Y_OFFSET, 0.),
+                    ..default()
+                });
         });
 }
 
@@ -79,7 +85,7 @@ fn init_camera(mut commands: Commands) {
     ));
 }
 
-fn init_ball(world: &mut World){
+fn init_ball(world: &mut World) {
     world.spawn(Collider::ball(100.));
 }
 
