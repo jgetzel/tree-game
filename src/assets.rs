@@ -34,6 +34,9 @@ pub struct AssetsLoading(Vec<HandleUntyped>);
 pub enum SpriteEnum {
     TrunkJr,
     HouseFront,
+    HouseFrontHouse,
+    HouseFrontTree1,
+    HouseFrontTree2,
     DebugCircle
 }
 
@@ -49,6 +52,18 @@ pub fn load_assets(
     assets.map.insert(
         SpriteEnum::HouseFront,
         asset_server.load("sprites/house_front.png"),
+    );
+    assets.map.insert(
+        SpriteEnum::HouseFrontHouse,
+        asset_server.load("sprites/house_front_house.png")
+    );
+    assets.map.insert(
+        SpriteEnum::HouseFrontTree1,
+        asset_server.load("sprites/house_front_tree_1.png")
+    );
+    assets.map.insert(
+        SpriteEnum::HouseFrontTree2,
+        asset_server.load("sprites/house_front_tree_2.png")
     );
     assets.map.insert(
         SpriteEnum::DebugCircle,

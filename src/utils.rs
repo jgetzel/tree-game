@@ -13,9 +13,13 @@ pub fn update_size_on_y(mut query: Query<&mut Transform, With<AutoSizeOnY>>) {
     }
 }
 
-pub fn auto_sort_on_y(mut query: Query<(&mut Transform), With<AutoSortOnY>>) {
-    for mut trans in query.iter_mut() {
-        trans.translation.z = -trans.translation.y / 100.;
+pub fn auto_sort_on_y(mut query: Query<(&mut Transform, Option<&YOffset>), With<AutoSortOnY>>) {
+    for (mut trans, y_off) in query.iter_mut() {
+        let y_off = match y_off {
+            Some(y_off) => y_off.0,
+            None => 0.
+        };
+        trans.translation.z = -(trans.translation.y + y_off) / 100.;
     }
 }
 

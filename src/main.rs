@@ -1,5 +1,5 @@
 use crate::assets::AssetLoaderPlugin;
-use crate::init_systems::EnvironmentInitPlugin;
+use crate::init_systems::{EnvironmentInitPlugin, YOffset};
 use crate::keyboard_input::KeyboardInputPlugin;
 use bevy::app::PluginGroupBuilder;
 use bevy::prelude::*;
@@ -33,6 +33,8 @@ fn main() {
         .add_system(update_size_on_y)
         .add_system(auto_sort_on_y)
         .add_system(reinsert_colliders);
+
+    app.register_type::<YOffset>();
     
     app.run();
 }

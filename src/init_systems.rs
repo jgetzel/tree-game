@@ -38,7 +38,7 @@ pub struct AutoSizeOnY;
 #[derive(Component)]
 pub struct AutoSortOnY;
 
-#[derive(Component, Copy, Clone)]
+#[derive(Component, Copy, Clone, Reflect)]
 pub struct YOffset(pub f32);
 
 fn init_player(mut commands: Commands, assets: Res<GameAssets>) {
@@ -52,6 +52,7 @@ fn init_player(mut commands: Commands, assets: Res<GameAssets>) {
             Flippable { right_facing: true },
             AutoSizeOnY,
             AutoSortOnY,
+            YOffset(-82.6),
             Velocity::default(),
             LockedAxes::ROTATION_LOCKED,
             Damping {
@@ -82,7 +83,8 @@ fn init_player(mut commands: Commands, assets: Res<GameAssets>) {
                     ..default()
                 },
                 ..default()
-            });
+            })
+            .insert(AutoSortOnY);
         });
 }
 
@@ -110,20 +112,74 @@ fn init_background(mut commands: Commands, assets: Res<GameAssets>) {
                     scale: Vec3::new(2., 1., 1.),
                     ..default()
                 }));
-            p.spawn(Collider::convex_polyline(vec![
-                Vect::new(132., -13.),
-                Vect::new(464., -155.),
-                Vect::new(618., -46.),
-                Vect::new(716., -80.),
-                Vect::new(715., 270.)
-            ]).unwrap());
-            p.spawn(Collider::polyline(vec![
-                Vect::new(-716., 69.),
-                Vect::new(-715., -256.),
-                Vect::new(713., -256.),
-                Vect::new(713., 69.)
-            ], Some(vec![[0,1], [1,2], [2,3], [3,0]])));
+            p.spawn(
+                Collider::convex_polyline(vec![
+                    Vect::new(132., -13.),
+                    Vect::new(464., -155.),
+                    Vect::new(615., -79.),
+                    Vect::new(716., -80.),
+                    Vect::new(715., 270.),
+                ])
+                .unwrap(),
+            );
+            p.spawn(Collider::polyline(
+                vec![
+                    Vect::new(-716., 69.),
+                    Vect::new(-715., -256.),
+                    Vect::new(713., -256.),
+                    Vect::new(713., 69.),
+                ],
+                Some(vec![[0, 1], [1, 2], [2, 3], [3, 0]]),
+            ));
         });
+
+    commands
+        .spawn(SpriteBundle {
+            texture: assets
+                .map
+                .get(&SpriteEnum::HouseFrontHouse)
+                .unwrap()
+                .clone(),
+            transform: Transform {
+                scale: Vec3::ONE * HOUSE_FRONT_SCALE,
+                ..default()
+            },
+            ..default()
+        })
+        .insert(YOffset(-13.))
+        .insert(AutoSortOnY);
+
+    commands
+        .spawn(SpriteBundle {
+            texture: assets
+                .map
+                .get(&SpriteEnum::HouseFrontTree1)
+                .unwrap()
+                .clone(),
+            transform: Transform {
+                scale: Vec3::ONE * HOUSE_FRONT_SCALE,
+                ..default()
+            },
+            ..default()
+        })
+        .insert(YOffset(-41.5))
+        .insert(AutoSortOnY);
+
+    commands
+        .spawn(SpriteBundle {
+            texture: assets
+                .map
+                .get(&SpriteEnum::HouseFrontTree2)
+                .unwrap()
+                .clone(),
+            transform: Transform {
+                scale: Vec3::ONE * HOUSE_FRONT_SCALE,
+                ..default()
+            },
+            ..default()
+        })
+        .insert(YOffset(9.7))
+        .insert(AutoSortOnY);
 }
 
 fn init_camera(mut commands: Commands) {
