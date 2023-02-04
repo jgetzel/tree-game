@@ -9,11 +9,11 @@ use bevy_rapier2d::prelude::*;
 const TRUNK_COLLIDER_RADIUS: f32 = 100.;
 const TRUNK_COLLIDER_Y_OFFSET: f32 = -100.;
 
-pub const TRUNK_SCALE: f32 = 0.1;
+pub const TRUNK_SCALE: f32 = 0.075;
 pub const HOUSE_FRONT_SCALE: f32 = 0.15;
 
 const CAMERA_LAYER: f32 = 100.;
-const CAMERA_SCALE: f32 = 0.75;
+const CAMERA_SCALE: f32 = 0.5;
 
 pub struct EnvironmentInitPlugin;
 
@@ -52,7 +52,7 @@ fn init_player(mut commands: Commands, assets: Res<GameAssets>) {
             Flippable { right_facing: true },
             AutoSizeOnY,
             AutoSortOnY,
-            YOffset(-82.6),
+            YOffset(-66.),
             Velocity::default(),
             LockedAxes::ROTATION_LOCKED,
             Damping {
@@ -134,6 +134,16 @@ fn init_background(mut commands: Commands, assets: Res<GameAssets>) {
             ));
         });
 
+    commands.spawn(SpriteBundle {
+        texture: assets.map.get(&SpriteEnum::HouseFrontBackground).unwrap().clone(),
+        transform: Transform {
+            scale: Vec3::ONE * 0.13,
+            translation: Vec3::new(0., 0., -501.),
+            ..default()
+        },
+        ..default()
+    });
+
     commands
         .spawn(SpriteBundle {
             texture: assets
@@ -188,11 +198,14 @@ fn init_camera(mut commands: Commands) {
         Camera2dBundle {
             transform: Transform {
                 translation: Vec3::new(0., 0., CAMERA_LAYER),
-                scale: Vec3::ONE * CAMERA_SCALE,
                 ..default()
             },
             camera_2d: Camera2d {
                 clear_color: ClearColorConfig::Custom(Color::rgb(0., 0., 0.)),
+            },
+            projection: OrthographicProjection {
+                scale: CAMERA_SCALE,
+                ..default()
             },
             ..default()
         },

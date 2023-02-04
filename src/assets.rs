@@ -35,6 +35,7 @@ pub enum SpriteEnum {
     TrunkJr,
     HouseFront,
     HouseFrontHouse,
+    HouseFrontBackground,
     HouseFrontTree1,
     HouseFrontTree2,
     HouseInside,
@@ -55,6 +56,10 @@ pub fn load_assets(
     assets.map.insert(
         SpriteEnum::HouseFront,
         asset_server.load("sprites/house_front.png"),
+    );
+    assets.map.insert(
+        SpriteEnum::HouseFrontBackground,
+        asset_server.load("sprites/house_front_background.png"),
     );
     assets.map.insert(
         SpriteEnum::HouseFrontHouse,

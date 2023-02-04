@@ -22,6 +22,13 @@ fn main() {
     let mut app = App::new();
 
     app.add_plugins(DefaultPlugins
+        .set(WindowPlugin {
+            window: WindowDescriptor {
+                mode: WindowMode::BorderlessFullscreen,
+                ..default()
+            },
+            ..default()
+        })
         .build().add_before::<AssetPlugin, _>(EmbeddedAssetPlugin))
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.))
         .add_plugins(DebugPlugins)
