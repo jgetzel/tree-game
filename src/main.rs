@@ -7,7 +7,7 @@ use bevy_embedded_assets::EmbeddedAssetPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_rapier2d::prelude::{NoUserData, RapierPhysicsPlugin};
 use bevy_rapier2d::render::RapierDebugRenderPlugin;
-use camera::camera_debug_circle;
+
 use utils::{auto_sort_on_y, reinsert_colliders, update_size_on_y};
 use crate::camera::camera_follow;
 use crate::player::{flip_flippables, move_player};

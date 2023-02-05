@@ -1,8 +1,6 @@
-use crate::init_systems::{AutoSizeOnY, AutoSortOnY, TRUNK_SCALE, YOffset};
 use crate::keyboard_input::PlayerInput;
 use bevy::prelude::*;
-use bevy_rapier2d::geometry::Collider;
-use bevy_rapier2d::prelude::{RigidBody, Velocity};
+use bevy_rapier2d::prelude::Velocity;
 
 pub const TRUNK_ACCEL: f32 = 2000.;
 pub const TRUNK_MAX_SPEED: f32 = 200.;
@@ -23,7 +21,7 @@ pub fn move_player(
     input: Res<PlayerInput>,
     time: Res<Time>,
 ) {
-    for (mut velocity) in query.iter_mut() {
+    for mut velocity in query.iter_mut() {
         let new_velocity = velocity.linvel + (TRUNK_ACCEL * input.movement * time.delta_seconds());
         velocity.linvel = if [TRUNK_MAX_SPEED, velocity.linvel.length()]
             .iter()
