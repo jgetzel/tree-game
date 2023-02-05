@@ -1,4 +1,4 @@
-use crate::keyboard_input::PlayerInput;
+use crate::{keyboard_input::PlayerInput, animations::{Animator, AnimEnum, Animations}, assets::SpriteEnum};
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::Velocity;
 
@@ -41,6 +41,20 @@ pub fn flip_flippables(
         if vel.linvel.x.abs() > DEADZONE {
             let flip_inv = if flip.right_facing { 1. } else { -1. };
             sprite.flip_x = vel.linvel.x * flip_inv < 0.
+        }
+    }
+}
+
+pub fn player_anim_controller(
+    mut query: Query<(&mut Animator, &Velocity), With<Player>>,
+    anims: Res<Animations>
+) {
+    for (mut anim, vel) in query.iter_mut() {
+        if vel.linvel.length() < DEADZONE {
+            anim.play_sprite(SpriteEnum::TrunkJr);
+        }
+        else {
+            anim.play_anim(anims.get(AnimEnum::TrunkWalk));
         }
     }
 }

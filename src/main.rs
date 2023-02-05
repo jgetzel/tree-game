@@ -1,7 +1,7 @@
 use crate::assets::AssetLoaderPlugin;
 use crate::init_systems::{EnvironmentInitPlugin, YOffset};
 use crate::keyboard_input::KeyboardInputPlugin;
-use animations::AnimPlugin;
+use animations::{AnimPlugin, Animator};
 use bevy::app::PluginGroupBuilder;
 use bevy::prelude::*;
 use bevy_embedded_assets::EmbeddedAssetPlugin;
@@ -9,6 +9,7 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_rapier2d::prelude::{NoUserData, RapierPhysicsPlugin};
 use bevy_rapier2d::render::RapierDebugRenderPlugin;
 
+use player::player_anim_controller;
 use utils::{auto_sort_on_y, reinsert_colliders, update_size_on_y};
 use crate::camera::camera_follow;
 use crate::player::{flip_flippables, move_player};
@@ -41,6 +42,7 @@ fn main() {
         .add_plugin(KeyboardInputPlugin);
 
     app.add_system(move_player)
+        .add_system(player_anim_controller)
         .add_system(camera_follow)
         .add_system(flip_flippables)
         .add_system(update_size_on_y)
@@ -48,7 +50,7 @@ fn main() {
         .add_system(reinsert_colliders);
 
     app.register_type::<YOffset>();
-    
+        
     app.run();
 }
 

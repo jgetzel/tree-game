@@ -1,4 +1,5 @@
 use bevy::prelude::{Plugin, Component, Query, Res, Image, Handle};
+use bevy::reflect::{Reflect, GetTypeRegistration};
 use bevy::time::Time;
 use bevy::{utils::HashMap, prelude::Resource};
 
@@ -27,11 +28,18 @@ pub enum AnimEnum {
     MouseyWalk,
     MouseyIdle,
     BugWalk,
+    TrunkWalk,
 }
 
 #[derive(Resource)]
 pub struct Animations {
     pub map: HashMap<AnimEnum, Animation>
+}
+
+impl Animations {
+    pub fn get(&self, anim_enum: AnimEnum) -> Animation {
+        self.map.get(&anim_enum).unwrap().clone()
+    }
 }
 
 impl Default for Animations {
@@ -52,12 +60,17 @@ impl Default for Animations {
              framerate: 8.,
               one_shot: false 
             });
+        map.insert(AnimEnum::TrunkWalk, Animation { 
+            sprites: vec![TrunkWalk1, TrunkWalk2, TrunkWalk3, TrunkWalk4, TrunkWalk5, TrunkWalk6],
+                framerate: 8.,
+                one_shot: false 
+            });
 
         Self { map }
     }
 }
 
-#[derive(Component)]
+#[derive(Component, Clone)]
 pub struct Animator {
     pub time: f32,
     pub current_anim: Animation,

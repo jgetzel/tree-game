@@ -1,3 +1,4 @@
+use crate::animations::{Animations, Animator, AnimEnum};
 use crate::assets::SpriteEnum::HouseFront;
 use crate::assets::{AppState, GameAssets, SpriteEnum};
 use crate::camera::{MainCamera, CameraBounds};
@@ -41,7 +42,11 @@ pub struct AutoSortOnY;
 #[derive(Component, Copy, Clone, Reflect)]
 pub struct YOffset(pub f32);
 
-fn init_player(mut commands: Commands, assets: Res<GameAssets>) {
+fn init_player(
+    mut commands: Commands, 
+    assets: Res<GameAssets>,
+    animations: Res<Animations>
+) {
     commands
         .spawn((
             SpriteBundle {
@@ -60,6 +65,7 @@ fn init_player(mut commands: Commands, assets: Res<GameAssets>) {
                 ..default()
             },
             RigidBody::Dynamic,
+            Animator::new(animations.get(AnimEnum::TrunkWalk))
         ))
         .insert(SpatialBundle {
             transform: Transform {

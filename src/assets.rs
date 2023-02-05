@@ -36,7 +36,7 @@ impl Plugin for AssetLoaderPlugin {
 #[derive(Default, Resource)]
 pub struct AssetsLoading(Vec<HandleUntyped>);
 
-#[derive(PartialEq, Eq, Hash, Copy, Clone)]
+#[derive(PartialEq, Eq, Hash, Copy, Clone, Reflect)]
 pub enum SpriteEnum {
     TrunkJr,
     TrunkWalk1,
