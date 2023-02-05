@@ -104,18 +104,18 @@ fn init_background(mut commands: Commands, assets: Res<GameAssets>) {
             p.spawn(Collider::ball(100.))
                 .insert(TransformBundle::from(Transform {
                     translation: Vec3::new(-222., 4., 0.) / HOUSE_FRONT_SCALE,
-                    scale: Vec3::new(2., 1., 1.),
+                    scale: Vec3::new(3., 1., 1.),
                     ..default()
                 }));
             p.spawn(Collider::ball(100.))
                 .insert(TransformBundle::from(Transform {
                     translation: Vec3::new(-532., -60., 0.) / HOUSE_FRONT_SCALE,
-                    scale: Vec3::new(2., 1., 1.),
+                    scale: Vec3::new(3., 1., 1.),
                     ..default()
                 }));
             p.spawn(
                 Collider::polyline(vec![
-                    Vect::new(132., -13.),
+                    Vect::new(121., -13.),
                     Vect::new(464., -155.),
                     Vect::new(594., -80.),
                     Vect::new(716., -118.),
