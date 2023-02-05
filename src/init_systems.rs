@@ -50,7 +50,7 @@ fn init_player(
     commands
         .spawn((
             SpriteBundle {
-                texture: assets.map.get(&SpriteEnum::TrunkJr).unwrap().clone(),
+                texture: assets.map.get(&SpriteEnum::TrunkWalk1).unwrap().clone(),
                 ..default()
             },
             Player,

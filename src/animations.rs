@@ -2,6 +2,7 @@ use bevy::prelude::{Plugin, Component, Query, Res, Image, Handle};
 use bevy::reflect::{Reflect, GetTypeRegistration};
 use bevy::time::Time;
 use bevy::{utils::HashMap, prelude::Resource};
+use lerp::num_traits::Zero;
 
 use crate::assets::{SpriteEnum, GameAssets};
 use crate::assets::SpriteEnum::*;
@@ -18,17 +19,19 @@ impl Plugin for AnimPlugin {
 
 #[derive(Clone)]
 pub struct Animation {
+    pub anim_enum: AnimEnum,
     pub sprites: Vec<SpriteEnum>,
     pub framerate: f32,
     pub one_shot: bool
 }
 
-#[derive(Eq,PartialEq, Hash)]
+#[derive(Eq,PartialEq, Hash, Clone, Copy)]
 pub enum AnimEnum {
     MouseyWalk,
     MouseyIdle,
     BugWalk,
     TrunkWalk,
+    StaticSprite,
 }
 
 #[derive(Resource)]
@@ -46,22 +49,26 @@ impl Default for Animations {
     fn default() -> Self {
         let mut map: HashMap<AnimEnum, Animation> = HashMap::new();
         map.insert(AnimEnum::MouseyIdle, Animation { 
+            anim_enum: AnimEnum::MouseyIdle,
             sprites: vec![MouseyIdle1, MouseyIdle2, MouseyIdle3], 
             framerate: 6., 
             one_shot: false 
         });
         map.insert(AnimEnum::MouseyWalk, Animation { 
+            anim_enum: AnimEnum::MouseyWalk,
             sprites: vec![MouseyWalk1, MouseyWalk2, MouseyWalk3, MouseyWalk4, MouseyWalk5], 
             framerate: 8., 
             one_shot: false 
         });
         map.insert(AnimEnum::BugWalk, Animation { 
+            anim_enum: AnimEnum::BugWalk,
             sprites: vec![Bug1, Bug2, Bug3, Bug4],
              framerate: 8.,
               one_shot: false 
             });
         map.insert(AnimEnum::TrunkWalk, Animation { 
-            sprites: vec![TrunkWalk1, TrunkWalk2, TrunkWalk3, TrunkWalk4, TrunkWalk5, TrunkWalk6],
+            anim_enum: AnimEnum::TrunkWalk,
+            sprites: vec![TrunkWalk2, TrunkWalk3, TrunkWalk4, TrunkWalk5, TrunkWalk6, TrunkWalk1],
                 framerate: 8.,
                 one_shot: false 
             });
@@ -89,6 +96,9 @@ impl Animator {
     }
 
     pub fn play_anim(&mut self, anim: Animation) {
+        if !anim.one_shot && self.current_anim.anim_enum == anim.anim_enum && self.playing {
+            return;
+        }
         self.time = 0.;
         self.current_anim = anim;
         self.playing = true;
@@ -106,8 +116,9 @@ impl Animator {
     pub fn play_sprite(&mut self, sprite: SpriteEnum) {
         self.playing = true;
         self.current_anim = Animation {
+            anim_enum: AnimEnum::StaticSprite,
             sprites: vec![sprite],
-            framerate: 60.,
+            framerate: 1.,
             one_shot: true
         };
         self.time = 0.;
@@ -124,13 +135,20 @@ pub fn animator_sys(
         if !animator.playing {
             return;
         }
+        if animator.time.is_zero() {
+            *handle = assets.get(animator.current_anim.sprites[0]);
+        }
+        
         let framerate = animator.current_anim.framerate;
         let anim_length = animator.current_anim.sprites.len();
-        let time_per_frame = anim_length as f32 / framerate;
-        
-        if time_per_frame * (animator.current_frame as f32 + 1.) < animator.time {
+        let time_per_frame = 1. / framerate;
+        let time_to_next_sprite = time_per_frame * (animator.current_frame as f32 + 1.);
+        if time_to_next_sprite < animator.time {
             animator.current_frame += 1;
             animator.current_frame %= anim_length;
+            if animator.current_frame == 0 {
+                animator.time %= time_per_frame * anim_length as f32;
+            }
             *handle = assets.get(animator.current_anim.sprites[animator.current_frame]);
         }
         

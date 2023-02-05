@@ -4,7 +4,7 @@ use bevy_rapier2d::prelude::Velocity;
 
 pub const TRUNK_ACCEL: f32 = 5000.;
 pub const TRUNK_MAX_SPEED: f32 = 200.;
-pub const TRUNK_FRICTION: f32 = 7.;
+pub const TRUNK_FRICTION: f32 = 15.;
 
 #[derive(Component)]
 pub struct Player;
@@ -46,12 +46,13 @@ pub fn flip_flippables(
 }
 
 pub fn player_anim_controller(
-    mut query: Query<(&mut Animator, &Velocity), With<Player>>,
+    mut query: Query<(&mut Animator), With<Player>>,
+    input: Res<PlayerInput>,
     anims: Res<Animations>
 ) {
-    for (mut anim, vel) in query.iter_mut() {
-        if vel.linvel.length() < DEADZONE {
-            anim.play_sprite(SpriteEnum::TrunkJr);
+    for mut anim in query.iter_mut() {
+        if input.movement.length() < DEADZONE {
+            anim.play_sprite(SpriteEnum::TrunkWalk1);
         }
         else {
             anim.play_anim(anims.get(AnimEnum::TrunkWalk));
