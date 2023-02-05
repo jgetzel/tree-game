@@ -1,12 +1,14 @@
-use bevy::prelude::{Audio, Commands, default, Res, SpriteBundle, Transform, TransformBundle};
+use bevy::prelude::{Audio, Commands, Component, default, Res, SpriteBundle, Transform, TransformBundle};
 use bevy::math::Vec3;
 use bevy_rapier2d::geometry::Collider;
 use bevy_rapier2d::math::Vect;
 use bevy::hierarchy::BuildChildren;
+use bevy_rapier2d::prelude::{ActiveEvents, Sensor};
 use crate::assets::{GameAssets, SpriteEnum};
 use crate::assets::AudioEnum::MusicMainTheme;
 use crate::assets::SpriteEnum::HouseFront;
-use crate::init_systems::{AutoSortOnY, YOffset};
+use crate::init_systems::{AutoSortOnY, TRUNK_SCALE, YOffset};
+use crate::utils::Interactable;
 
 pub const HOUSE_FRONT_SCALE: f32 = 0.15;
 
@@ -138,9 +140,27 @@ pub fn init_background(mut commands: Commands, assets: Res<GameAssets>) {
         .insert(YOffset(-25.));
 }
 
+#[derive(Component)]
+pub struct DoorInter;
+
+pub fn init_door(
+    mut commands: Commands,
+) {
+    commands.spawn(Collider::ball(300.))
+        .insert(TransformBundle::from(Transform {
+            translation: Vec3::new(347., -105., 0.),
+            scale: Vec3::new(3., 2., 1.) * TRUNK_SCALE,
+            ..default()
+        }))
+        .insert(ActiveEvents::COLLISION_EVENTS)
+        .insert(Sensor)
+        .insert(Interactable)
+        .insert(DoorInter);
+}
+
 pub fn init_music(
     audio: Res<Audio>,
-    assets: Res<GameAssets>
+    assets: Res<GameAssets>,
 ) {
     audio.play(assets.audio.get(&MusicMainTheme).unwrap().clone());
 }

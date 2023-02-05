@@ -45,7 +45,6 @@ pub enum AudioEnum {
 
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Reflect)]
 pub enum SpriteEnum {
-    TrunkJr,
     TrunkIdle1,
     TrunkIdle2,
     TrunkIdle3,
@@ -81,10 +80,6 @@ pub fn load_assets(
     mut loading: ResMut<AssetsLoading>,
     asset_server: Res<AssetServer>,
 ) {
-    assets.sprites.insert(
-        SpriteEnum::TrunkJr,
-        asset_server.load("sprites/trunk-jr.png"),
-    );
     assets.sprites.insert(
         SpriteEnum::HouseFront,
         asset_server.load("sprites/house_front.png"),

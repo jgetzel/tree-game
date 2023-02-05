@@ -3,10 +3,13 @@ pub mod environment;
 use crate::animations::{Animations, Animator, AnimEnum};
 use crate::assets::{AppState, GameAssets, SpriteEnum};
 use crate::camera::{CameraBounds, MainCamera};
-use crate::player::{Flippable, Player, TRUNK_FRICTION};
+use crate::player::{Flippable, Player, PlayerInteractor, Trunk, TRUNK_FRICTION};
 use bevy::core_pipeline::clear_color::ClearColorConfig;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
+use crate::assets::SpriteEnum::MouseyIdle1;
+use crate::init_systems::environment::init_door;
+use crate::utils::Interactable;
 
 const TRUNK_COLLIDER_RADIUS: f32 = 150.;
 const TRUNK_COLLIDER_Y_OFFSET: f32 = -100.;
@@ -24,7 +27,9 @@ impl Plugin for EnvironmentInitPlugin {
             SystemSet::on_enter(AppState::InGame)
                 .with_system(init_player)
                 .with_system(init_camera)
+                .with_system(init_mousey)
                 .with_system(environment::init_background)
+                .with_system(init_door)
                 .with_system(environment::init_music)
         );
 
@@ -51,6 +56,7 @@ fn init_player(mut commands: Commands, assets: Res<GameAssets>, animations: Res<
                 ..default()
             },
             Player,
+            Trunk,
             Flippable { right_facing: true },
             AutoSizeOnY,
             AutoSortOnY,
@@ -66,6 +72,7 @@ fn init_player(mut commands: Commands, assets: Res<GameAssets>, animations: Res<
         ))
         .insert(SpatialBundle {
             transform: Transform {
+                translation: Vec3::new(-400., 0., 0.),
                 scale: Vec3::ONE * TRUNK_SCALE,
                 ..default()
             },
@@ -78,6 +85,12 @@ fn init_player(mut commands: Commands, assets: Res<GameAssets>, animations: Res<
                     transform: Transform::from_xyz(0., TRUNK_COLLIDER_Y_OFFSET, 0.),
                     ..default()
                 });
+
+            p.spawn(PlayerInteractor)
+                .insert(Collider::ball(700.))
+                .insert(Sensor)
+                .insert(ActiveEvents::COLLISION_EVENTS)
+                .insert(TransformBundle::from(Transform::from_xyz(20., 0., 0.)));
 
             p.spawn(SpriteBundle {
                 texture: assets.get(SpriteEnum::Shadow),
@@ -105,7 +118,7 @@ fn init_camera(mut commands: Commands) {
     commands.spawn((
         Camera2dBundle {
             transform: Transform {
-                translation: Vec3::new(0., 0., CAMERA_LAYER),
+                translation: Vec3::new(-400., 0., CAMERA_LAYER),
                 ..default()
             },
             camera_2d: Camera2d {
@@ -120,6 +133,36 @@ fn init_camera(mut commands: Commands) {
         CameraBounds(-714., 714.),
         MainCamera,
     ));
+}
+
+#[derive(Component, Copy, Clone)]
+pub struct Mousey;
+
+fn init_mousey(
+    mut commands: Commands,
+    assets: Res<GameAssets>,
+) {
+    commands.spawn(
+        SpriteBundle {
+            texture: assets.get(MouseyIdle1),
+            transform: Transform {
+                translation: Vec3::new(565., -52., 0.),
+                scale: Vec3::ONE * 0.1,
+                ..default()
+            },
+            ..default()
+        }
+    ).insert(AutoSortOnY)
+        .insert(YOffset(-65.))
+        .insert(Mousey)
+        .with_children(|p| {
+            p.spawn(Collider::ball(100.))
+                .insert(TransformBundle::from(Transform::default()))
+                .insert(Sensor)
+                .insert(ActiveEvents::COLLISION_EVENTS)
+                .insert(Mousey)
+                .insert(Interactable);
+        });
 }
 
 fn init_gravity(mut config: ResMut<RapierConfiguration>) {

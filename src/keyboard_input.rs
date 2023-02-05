@@ -11,7 +11,8 @@ use std::collections::HashMap;
 pub struct PlayerInput {
     pub movement: Vec2,
     pub mouse_pos: Vec2,
-    pub just_clicked: Vec2,
+    pub just_clicked: bool,
+    pub just_interacted: bool
 }
 
 pub struct KeyboardInputPlugin;
@@ -61,6 +62,8 @@ fn keyboard_input(keys: Res<Input<KeyCode>>, mut input: ResMut<PlayerInput>) {
     if let Some(input_update) = input_update {
         input.movement += input_update;
     }
+
+    input.just_interacted = keys.just_pressed(KeyCode::E);
 }
 
 pub fn mouse_position(
