@@ -41,6 +41,14 @@ pub enum SpriteEnum {
     HouseInside,
     LadyIdle,
     PillBug,
+    MouseyIdle1,
+    MouseyIdle2,
+    MouseyIdle3,
+    MouseyWalk1,
+    MouseyWalk2,
+    MouseyWalk3,
+    MouseyWalk4,
+    MouseyWalk5,
     DebugCircle
 }
 
@@ -84,6 +92,38 @@ pub fn load_assets(
     assets.map.insert(
         SpriteEnum::PillBug,
         asset_server.load("sprites/pill_bug.png")
+    );
+    assets.map.insert(
+        SpriteEnum::MouseyWalk1,
+        asset_server.load("sprites/mousey/mouseywalk1.png")
+    );
+    assets.map.insert(
+        SpriteEnum::MouseyWalk2,
+        asset_server.load("sprites/mousey/mouseywalk2.png")
+    );
+    assets.map.insert(
+        SpriteEnum::MouseyWalk3,
+        asset_server.load("sprites/mousey/mouseywalk3.png")
+    );
+    assets.map.insert(
+        SpriteEnum::MouseyWalk4,
+        asset_server.load("sprites/mousey/mouseywalk4.png")
+    );
+    assets.map.insert(
+        SpriteEnum::MouseyWalk5,
+        asset_server.load("sprites/mousey/mouseywalk5.png")
+    );
+    assets.map.insert(
+        SpriteEnum::MouseyIdle1,
+        asset_server.load("sprites/mousey/mousey_idle1.png")
+    );
+    assets.map.insert(
+        SpriteEnum::MouseyIdle2,
+        asset_server.load("sprites/mousey/mousey_idle2.png")
+    );
+    assets.map.insert(
+        SpriteEnum::MouseyIdle3,
+        asset_server.load("sprites/mousey/mousey_idle3.png")
     );
     assets.map.insert(
         SpriteEnum::DebugCircle,
