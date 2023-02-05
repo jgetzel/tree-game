@@ -1,5 +1,6 @@
 use bevy::asset::LoadState;
 use bevy::{prelude::*, utils::HashMap};
+use crate::assets::AudioEnum::MusicMainTheme;
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum AppState {
@@ -10,12 +11,13 @@ pub enum AppState {
 
 #[derive(Default, Resource, Clone)]
 pub struct GameAssets {
-    pub map: HashMap<SpriteEnum, Handle<Image>>,
+    pub sprites: HashMap<SpriteEnum, Handle<Image>>,
+    pub audio: HashMap<AudioEnum, Handle<AudioSource>>
 }
 
 impl GameAssets {
     pub fn get(&self, sprite: SpriteEnum) -> Handle<Image> {
-        self.map.get(&sprite).unwrap().clone()
+        self.sprites.get(&sprite).unwrap().clone()
     }
 }
 
@@ -37,14 +39,19 @@ impl Plugin for AssetLoaderPlugin {
 pub struct AssetsLoading(Vec<HandleUntyped>);
 
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Reflect)]
+pub enum AudioEnum {
+    MusicMainTheme
+}
+
+#[derive(PartialEq, Eq, Hash, Copy, Clone, Reflect)]
 pub enum SpriteEnum {
     TrunkJr,
+    TrunkIdle1,
+    TrunkIdle2,
+    TrunkIdle3,
     TrunkWalk1,
     TrunkWalk2,
     TrunkWalk3,
-    TrunkWalk4,
-    TrunkWalk5,
-    TrunkWalk6,
     HouseFront,
     HouseFrontHouse,
     HouseFrontBackground,
@@ -74,123 +81,128 @@ pub fn load_assets(
     mut loading: ResMut<AssetsLoading>,
     asset_server: Res<AssetServer>,
 ) {
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::TrunkJr,
         asset_server.load("sprites/trunk-jr.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::HouseFront,
         asset_server.load("sprites/house_front.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::HouseFrontBackground,
         asset_server.load("sprites/house_front_background.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::HouseFrontHouse,
         asset_server.load("sprites/house_front_house.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::HouseFrontTree1,
         asset_server.load("sprites/house_front_tree_1.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::HouseFrontTree2,
         asset_server.load("sprites/house_front_tree_2.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::HouseInside,
         asset_server.load("sprites/house_inside.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::LadyIdle,
         asset_server.load("sprites/lady_idle.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::MouseyWalk1,
         asset_server.load("sprites/mousey/mouseywalk1.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::MouseyWalk2,
         asset_server.load("sprites/mousey/mouseywalk2.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::MouseyWalk3,
         asset_server.load("sprites/mousey/mouseywalk3.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::MouseyWalk4,
         asset_server.load("sprites/mousey/mouseywalk4.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::MouseyWalk5,
         asset_server.load("sprites/mousey/mouseywalk5.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::MouseyIdle1,
         asset_server.load("sprites/mousey/mousey_idle1.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::MouseyIdle2,
         asset_server.load("sprites/mousey/mousey_idle2.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::MouseyIdle3,
         asset_server.load("sprites/mousey/mousey_idle3.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::Bug1,
         asset_server.load("sprites/bug/buggyboo1.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::Bug2,
         asset_server.load("sprites/bug/buggyboo2.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::Bug3,
         asset_server.load("sprites/bug/buggyboo3.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::Bug4,
         asset_server.load("sprites/bug/buggyboo4.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::TrashCan,
         asset_server.load("sprites/trash_can.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::TrunkWalk1,
-        asset_server.load("sprites/trunk/trunkjr1.png"),
+        asset_server.load("sprites/trunk/jr_walk1.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::TrunkWalk2,
-        asset_server.load("sprites/trunk/trunkjr2.png"),
+        asset_server.load("sprites/trunk/jr_walk2.png"),
     );
-    assets.map.insert(
+    assets.sprites.insert(
         SpriteEnum::TrunkWalk3,
-        asset_server.load("sprites/trunk/trunkjr3.png"),
-    );
-    assets.map.insert(
-        SpriteEnum::TrunkWalk4,
-        asset_server.load("sprites/trunk/trunkjr4.png"),
-    );
-    assets.map.insert(
-        SpriteEnum::TrunkWalk5,
-        asset_server.load("sprites/trunk/trunkjr5.png"),
-    );
-    assets.map.insert(
-        SpriteEnum::TrunkWalk6,
-        asset_server.load("sprites/trunk/trunkjr6.png"),
+        asset_server.load("sprites/trunk/jr_walk3.png"),
     );
     assets
-        .map
+        .sprites
         .insert(SpriteEnum::Shadow, asset_server.load("sprites/shadow.png"));
-    assets.map.insert(
+    assets.sprites.insert(
+        SpriteEnum::TrunkIdle1,
+        asset_server.load("sprites/trunk/jr_idle1.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::TrunkIdle2,
+        asset_server.load("sprites/trunk/jr_idle2.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::TrunkIdle3,
+        asset_server.load("sprites/trunk/jr_idle3.png"),
+    );
+    assets.sprites.insert(
         SpriteEnum::DebugCircle,
         asset_server.load("sprites/debug_circle.png"),
     );
 
-    for (_, asset) in assets.map.iter() {
+    assets.audio.insert(
+        MusicMainTheme,
+        asset_server.load("audio/tree_game_theme.wav")
+    );
+
+    for (_, asset) in assets.sprites.iter() {
         loading.0.push(asset.clone_untyped());
     }
 }

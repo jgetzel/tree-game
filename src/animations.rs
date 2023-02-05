@@ -30,6 +30,7 @@ pub enum AnimEnum {
     MouseyIdle,
     BugWalk,
     TrunkWalk,
+    TrunkIdle,
     StaticSprite,
 }
 
@@ -85,9 +86,20 @@ impl Default for Animations {
             Animation {
                 anim_enum: AnimEnum::TrunkWalk,
                 sprites: vec![
-                    TrunkWalk2, TrunkWalk3, TrunkWalk4, TrunkWalk5, TrunkWalk6, TrunkWalk1,
+                    TrunkWalk2, TrunkWalk1, TrunkWalk3, TrunkWalk1,
                 ],
-                framerate: 8.,
+                framerate: 6.,
+                one_shot: false,
+            },
+        );
+        map.insert(
+            AnimEnum::TrunkIdle,
+            Animation {
+                anim_enum: AnimEnum::TrunkIdle,
+                sprites: vec![
+                    TrunkIdle1, TrunkIdle2, TrunkIdle3, TrunkIdle2,
+                ],
+                framerate: 6.,
                 one_shot: false,
             },
         );

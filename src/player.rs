@@ -6,8 +6,8 @@ use crate::{
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::Velocity;
 
-pub const TRUNK_ACCEL: f32 = 5000.;
-pub const TRUNK_MAX_SPEED: f32 = 200.;
+pub const TRUNK_ACCEL: f32 = 4000.;
+pub const TRUNK_MAX_SPEED: f32 = 100.;
 pub const TRUNK_FRICTION: f32 = 15.;
 
 #[derive(Component)]
