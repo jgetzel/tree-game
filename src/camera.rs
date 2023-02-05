@@ -1,6 +1,15 @@
-use bevy::{prelude::{Component, Query, Res, Resource, Time, Transform, With, Without, OrthographicProjection, Commands, Vec3, default, GlobalTransform, Camera, Vec2}, sprite::SpriteBundle};
+use crate::{
+    assets::{GameAssets, SpriteEnum},
+    player::Player,
+};
+use bevy::{
+    prelude::{
+        default, Camera, Commands, Component, GlobalTransform, OrthographicProjection, Query, Res,
+        Resource, Time, Transform, Vec2, Vec3, With, Without,
+    },
+    sprite::SpriteBundle,
+};
 use lerp::Lerp;
-use crate::{player::Player, assets::{GameAssets, SpriteEnum}};
 
 #[derive(Resource, Component)]
 pub struct MainCamera;
@@ -14,9 +23,12 @@ pub struct CameraBounds(pub f32, pub f32);
 pub struct LockedCamera;
 
 pub fn camera_follow(
-    mut camera_q: Query<(&mut Transform, &Camera, Option<&CameraBounds>), (With<MainCamera>, Without<LockedCamera>)>,
+    mut camera_q: Query<
+        (&mut Transform, &Camera, Option<&CameraBounds>),
+        (With<MainCamera>, Without<LockedCamera>),
+    >,
     player_q: Query<&Transform, (With<Player>, Without<MainCamera>)>,
-    time: Res<Time>
+    time: Res<Time>,
 ) {
     let Ok((mut cam_trans, cam, bounds)) = camera_q.get_single_mut()
         else { return; };
@@ -25,10 +37,10 @@ pub fn camera_follow(
 
     cam_trans.translation.x = cam_trans.translation.x.lerp(
         player_trans.translation.x,
-        time.delta_seconds() * CAMERA_SMOOTHING
+        time.delta_seconds() * CAMERA_SMOOTHING,
     );
 
-    let Some(bounds) = bounds 
+    let Some(bounds) = bounds
         else { return; };
 
     let left = ndc_to_world(&cam_trans, cam, Vec2::new(-1., 0.));
@@ -49,26 +61,26 @@ pub fn camera_debug_circle(
     camera_q: Query<(&GlobalTransform, &Camera)>,
     mut circle_q: Query<&mut Transform, (With<CameraDebugCircle>, Without<OrthographicProjection>)>,
     assets: Res<GameAssets>,
-    mut commands: Commands
+    mut commands: Commands,
 ) {
-    let Ok((trans, camera)) = camera_q.get_single() 
-    else { return; };
+    let Ok((trans, camera)) = camera_q.get_single()
+        else { return; };
 
-    let Ok(mut circle) = circle_q.get_single_mut() 
-    else {
-        commands.spawn((
-            SpriteBundle {
-                texture: assets.map.get(&SpriteEnum::DebugCircle).unwrap().clone(),
-                transform: Transform {
-                    scale: Vec3::ONE * 0.01,
+    let Ok(mut circle) = circle_q.get_single_mut()
+        else {
+            commands.spawn((
+                SpriteBundle {
+                    texture: assets.get(SpriteEnum::DebugCircle),
+                    transform: Transform {
+                        scale: Vec3::ONE * 0.01,
+                        ..default()
+                    },
                     ..default()
                 },
-                ..default()
-            },
-            CameraDebugCircle
-        ));
-        return;
-    };
+                CameraDebugCircle
+            ));
+            return;
+        };
 
     let ndc_to_world = trans.compute_matrix() * camera.projection_matrix().inverse();
 

@@ -1,7 +1,7 @@
-use crate::animations::{Animations, Animator, AnimEnum};
+use crate::animations::{AnimEnum, Animations, Animator};
 use crate::assets::SpriteEnum::HouseFront;
 use crate::assets::{AppState, GameAssets, SpriteEnum};
-use crate::camera::{MainCamera, CameraBounds};
+use crate::camera::{CameraBounds, MainCamera};
 use crate::player::{Flippable, Player, TRUNK_FRICTION};
 use bevy::core_pipeline::clear_color::ClearColorConfig;
 use bevy::prelude::*;
@@ -42,11 +42,7 @@ pub struct AutoSortOnY;
 #[derive(Component, Copy, Clone, Reflect)]
 pub struct YOffset(pub f32);
 
-fn init_player(
-    mut commands: Commands, 
-    assets: Res<GameAssets>,
-    animations: Res<Animations>
-) {
+fn init_player(mut commands: Commands, assets: Res<GameAssets>, animations: Res<Animations>) {
     commands
         .spawn((
             SpriteBundle {
@@ -65,7 +61,7 @@ fn init_player(
                 ..default()
             },
             RigidBody::Dynamic,
-            Animator::new(animations.get(AnimEnum::TrunkWalk))
+            Animator::new(animations.get(AnimEnum::TrunkWalk)),
         ))
         .insert(SpatialBundle {
             transform: Transform {
@@ -81,7 +77,7 @@ fn init_player(
                     transform: Transform::from_xyz(0., TRUNK_COLLIDER_Y_OFFSET, 0.),
                     ..default()
                 });
-            
+
             p.spawn(SpriteBundle {
                 texture: assets.get(SpriteEnum::Shadow),
                 transform: Transform {
@@ -128,15 +124,16 @@ fn init_background(mut commands: Commands, assets: Res<GameAssets>) {
                     scale: Vec3::new(3., 1., 1.),
                     ..default()
                 }));
-            p.spawn(
-                Collider::polyline(vec![
+            p.spawn(Collider::polyline(
+                vec![
                     Vect::new(121., -13.),
                     Vect::new(464., -155.),
                     Vect::new(594., -80.),
                     Vect::new(716., -118.),
                     Vect::new(715., 270.),
-                ], Some(vec![[0, 1], [1, 2], [2, 3], [3, 4], [4, 0]]))
-            );
+                ],
+                Some(vec![[0, 1], [1, 2], [2, 3], [3, 4], [4, 0]]),
+            ));
             p.spawn(Collider::polyline(
                 vec![
                     Vect::new(-716., 33.),
@@ -144,20 +141,23 @@ fn init_background(mut commands: Commands, assets: Res<GameAssets>) {
                     Vect::new(713., -256.),
                     Vect::new(713., 69.),
                     Vect::new(162., 28.),
-                    Vect::new(-255., 70.)
+                    Vect::new(-255., 70.),
                 ],
                 Some(vec![[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 0]]),
             ));
             p.spawn(Collider::ball(200.))
-            .insert(TransformBundle::from(Transform {
-                translation: Vec3::new(561., -120., 0.) / HOUSE_FRONT_SCALE,
-                ..default()
-            })
-            );
+                .insert(TransformBundle::from(Transform {
+                    translation: Vec3::new(561., -120., 0.) / HOUSE_FRONT_SCALE,
+                    ..default()
+                }));
         });
 
     commands.spawn(SpriteBundle {
-        texture: assets.map.get(&SpriteEnum::HouseFrontBackground).unwrap().clone(),
+        texture: assets
+            .map
+            .get(&SpriteEnum::HouseFrontBackground)
+            .unwrap()
+            .clone(),
         transform: Transform {
             scale: Vec3::ONE * 0.14,
             translation: Vec3::new(0., 0., -501.),
@@ -223,7 +223,8 @@ fn init_background(mut commands: Commands, assets: Res<GameAssets>) {
                 ..default()
             },
             ..default()
-        }).insert(AutoSortOnY)
+        })
+        .insert(AutoSortOnY)
         .insert(YOffset(-25.));
 }
 

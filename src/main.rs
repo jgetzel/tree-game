@@ -9,31 +9,34 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_rapier2d::prelude::{NoUserData, RapierPhysicsPlugin};
 use bevy_rapier2d::render::RapierDebugRenderPlugin;
 
-use player::player_anim_controller;
-use utils::{auto_sort_on_y, reinsert_colliders, update_size_on_y};
 use crate::camera::camera_follow;
 use crate::player::{flip_flippables, move_player};
+use player::player_anim_controller;
+use utils::{auto_sort_on_y, reinsert_colliders, update_size_on_y};
 
+mod animations;
 mod assets;
 mod camera;
 mod init_systems;
 mod keyboard_input;
 mod player;
 mod utils;
-mod animations;
 
 fn main() {
     let mut app = App::new();
 
-    app.add_plugins(DefaultPlugins
-        .set(WindowPlugin {
-            window: WindowDescriptor {
-                mode: WindowMode::BorderlessFullscreen,
+    app.add_plugins(
+        DefaultPlugins
+            .set(WindowPlugin {
+                window: WindowDescriptor {
+                    mode: WindowMode::BorderlessFullscreen,
+                    ..default()
+                },
                 ..default()
-            },
-            ..default()
-        })
-        .build().add_before::<AssetPlugin, _>(EmbeddedAssetPlugin))
+            })
+            .build()
+            .add_before::<AssetPlugin, _>(EmbeddedAssetPlugin),
+    )
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.))
         .add_plugins(DebugPlugins)
         .add_plugin(AssetLoaderPlugin)
@@ -50,7 +53,7 @@ fn main() {
         .add_system(reinsert_colliders);
 
     app.register_type::<YOffset>();
-        
+
     app.run();
 }
 

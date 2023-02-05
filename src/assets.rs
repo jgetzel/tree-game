@@ -66,7 +66,7 @@ pub enum SpriteEnum {
     Bug4,
     TrashCan,
     Shadow,
-    DebugCircle
+    DebugCircle,
 }
 
 pub fn load_assets(
@@ -88,107 +88,106 @@ pub fn load_assets(
     );
     assets.map.insert(
         SpriteEnum::HouseFrontHouse,
-        asset_server.load("sprites/house_front_house.png")
+        asset_server.load("sprites/house_front_house.png"),
     );
     assets.map.insert(
         SpriteEnum::HouseFrontTree1,
-        asset_server.load("sprites/house_front_tree_1.png")
+        asset_server.load("sprites/house_front_tree_1.png"),
     );
     assets.map.insert(
         SpriteEnum::HouseFrontTree2,
-        asset_server.load("sprites/house_front_tree_2.png")
+        asset_server.load("sprites/house_front_tree_2.png"),
     );
     assets.map.insert(
         SpriteEnum::HouseInside,
-        asset_server.load("sprites/house_inside.png")
+        asset_server.load("sprites/house_inside.png"),
     );
     assets.map.insert(
         SpriteEnum::LadyIdle,
-        asset_server.load("sprites/lady_idle.png")
+        asset_server.load("sprites/lady_idle.png"),
     );
     assets.map.insert(
         SpriteEnum::MouseyWalk1,
-        asset_server.load("sprites/mousey/mouseywalk1.png")
+        asset_server.load("sprites/mousey/mouseywalk1.png"),
     );
     assets.map.insert(
         SpriteEnum::MouseyWalk2,
-        asset_server.load("sprites/mousey/mouseywalk2.png")
+        asset_server.load("sprites/mousey/mouseywalk2.png"),
     );
     assets.map.insert(
         SpriteEnum::MouseyWalk3,
-        asset_server.load("sprites/mousey/mouseywalk3.png")
+        asset_server.load("sprites/mousey/mouseywalk3.png"),
     );
     assets.map.insert(
         SpriteEnum::MouseyWalk4,
-        asset_server.load("sprites/mousey/mouseywalk4.png")
+        asset_server.load("sprites/mousey/mouseywalk4.png"),
     );
     assets.map.insert(
         SpriteEnum::MouseyWalk5,
-        asset_server.load("sprites/mousey/mouseywalk5.png")
+        asset_server.load("sprites/mousey/mouseywalk5.png"),
     );
     assets.map.insert(
         SpriteEnum::MouseyIdle1,
-        asset_server.load("sprites/mousey/mousey_idle1.png")
+        asset_server.load("sprites/mousey/mousey_idle1.png"),
     );
     assets.map.insert(
         SpriteEnum::MouseyIdle2,
-        asset_server.load("sprites/mousey/mousey_idle2.png")
+        asset_server.load("sprites/mousey/mousey_idle2.png"),
     );
     assets.map.insert(
         SpriteEnum::MouseyIdle3,
-        asset_server.load("sprites/mousey/mousey_idle3.png")
+        asset_server.load("sprites/mousey/mousey_idle3.png"),
     );
     assets.map.insert(
         SpriteEnum::Bug1,
-        asset_server.load("sprites/bug/buggyboo1.png")
+        asset_server.load("sprites/bug/buggyboo1.png"),
     );
     assets.map.insert(
         SpriteEnum::Bug2,
-        asset_server.load("sprites/bug/buggyboo2.png")
+        asset_server.load("sprites/bug/buggyboo2.png"),
     );
     assets.map.insert(
         SpriteEnum::Bug3,
-        asset_server.load("sprites/bug/buggyboo3.png")
+        asset_server.load("sprites/bug/buggyboo3.png"),
     );
     assets.map.insert(
         SpriteEnum::Bug4,
-        asset_server.load("sprites/bug/buggyboo4.png")
+        asset_server.load("sprites/bug/buggyboo4.png"),
     );
     assets.map.insert(
         SpriteEnum::TrashCan,
-        asset_server.load("sprites/trash_can.png")
+        asset_server.load("sprites/trash_can.png"),
     );
     assets.map.insert(
         SpriteEnum::TrunkWalk1,
-        asset_server.load("sprites/trunk/trunkjr1.png")
+        asset_server.load("sprites/trunk/trunkjr1.png"),
     );
     assets.map.insert(
         SpriteEnum::TrunkWalk2,
-        asset_server.load("sprites/trunk/trunkjr2.png")
+        asset_server.load("sprites/trunk/trunkjr2.png"),
     );
     assets.map.insert(
         SpriteEnum::TrunkWalk3,
-        asset_server.load("sprites/trunk/trunkjr3.png")
+        asset_server.load("sprites/trunk/trunkjr3.png"),
     );
     assets.map.insert(
         SpriteEnum::TrunkWalk4,
-        asset_server.load("sprites/trunk/trunkjr4.png")
+        asset_server.load("sprites/trunk/trunkjr4.png"),
     );
     assets.map.insert(
         SpriteEnum::TrunkWalk5,
-        asset_server.load("sprites/trunk/trunkjr5.png")
+        asset_server.load("sprites/trunk/trunkjr5.png"),
     );
     assets.map.insert(
         SpriteEnum::TrunkWalk6,
-        asset_server.load("sprites/trunk/trunkjr6.png")
+        asset_server.load("sprites/trunk/trunkjr6.png"),
     );
-    assets.map.insert(
-        SpriteEnum::Shadow,
-        asset_server.load("sprites/shadow.png")
-    );
+    assets
+        .map
+        .insert(SpriteEnum::Shadow, asset_server.load("sprites/shadow.png"));
     assets.map.insert(
         SpriteEnum::DebugCircle,
-        asset_server.load("sprites/debug_circle.png")
+        asset_server.load("sprites/debug_circle.png"),
     );
 
     for (_, asset) in assets.map.iter() {

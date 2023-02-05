@@ -1,4 +1,8 @@
-use crate::{keyboard_input::PlayerInput, animations::{Animator, AnimEnum, Animations}, assets::SpriteEnum};
+use crate::{
+    animations::{AnimEnum, Animations, Animator},
+    assets::SpriteEnum,
+    keyboard_input::PlayerInput,
+};
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::Velocity;
 
@@ -11,7 +15,7 @@ pub struct Player;
 
 #[derive(Component)]
 pub struct Flippable {
-    pub right_facing: bool
+    pub right_facing: bool,
 }
 
 const DEADZONE: f32 = 0.15;
@@ -34,9 +38,7 @@ pub fn move_player(
     }
 }
 
-pub fn flip_flippables(
-    mut query: Query<(&Velocity, &mut Sprite, &Flippable)>,
-) {
+pub fn flip_flippables(mut query: Query<(&Velocity, &mut Sprite, &Flippable)>) {
     for (vel, mut sprite, flip) in query.iter_mut() {
         if vel.linvel.x.abs() > DEADZONE {
             let flip_inv = if flip.right_facing { 1. } else { -1. };
@@ -48,13 +50,12 @@ pub fn flip_flippables(
 pub fn player_anim_controller(
     mut query: Query<(&mut Animator), With<Player>>,
     input: Res<PlayerInput>,
-    anims: Res<Animations>
+    anims: Res<Animations>,
 ) {
     for mut anim in query.iter_mut() {
         if input.movement.length() < DEADZONE {
             anim.play_sprite(SpriteEnum::TrunkWalk1);
-        }
-        else {
+        } else {
             anim.play_anim(anims.get(AnimEnum::TrunkWalk));
         }
     }
