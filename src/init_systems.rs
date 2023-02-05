@@ -52,7 +52,7 @@ fn init_player(mut commands: Commands, assets: Res<GameAssets>) {
             Flippable { right_facing: true },
             AutoSizeOnY,
             AutoSortOnY,
-            YOffset(-66.),
+            YOffset(-70.),
             Velocity::default(),
             LockedAxes::ROTATION_LOCKED,
             Damping {
@@ -114,14 +114,13 @@ fn init_background(mut commands: Commands, assets: Res<GameAssets>) {
                     ..default()
                 }));
             p.spawn(
-                Collider::convex_polyline(vec![
+                Collider::polyline(vec![
                     Vect::new(132., -13.),
                     Vect::new(464., -155.),
-                    Vect::new(615., -79.),
-                    Vect::new(716., -80.),
+                    Vect::new(594., -80.),
+                    Vect::new(716., -118.),
                     Vect::new(715., 270.),
-                ])
-                .unwrap(),
+                ], Some(vec![[0, 1], [1, 2], [2, 3], [3, 4], [4, 0]]))
             );
             p.spawn(Collider::polyline(
                 vec![
