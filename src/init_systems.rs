@@ -7,7 +7,7 @@ use bevy::core_pipeline::clear_color::ClearColorConfig;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-const TRUNK_COLLIDER_RADIUS: f32 = 100.;
+const TRUNK_COLLIDER_RADIUS: f32 = 150.;
 const TRUNK_COLLIDER_Y_OFFSET: f32 = -100.;
 
 pub const TRUNK_SCALE: f32 = 0.075;
@@ -81,6 +81,15 @@ fn init_player(
                     transform: Transform::from_xyz(0., TRUNK_COLLIDER_Y_OFFSET, 0.),
                     ..default()
                 });
+            
+            p.spawn(SpriteBundle {
+                texture: assets.get(SpriteEnum::Shadow),
+                transform: Transform {
+                    translation: Vec3::new(0., -90. / TRUNK_SCALE, -100.),
+                    ..default()
+                },
+                ..default()
+            });
 
             #[cfg(debug_assertions)]
             p.spawn(SpriteBundle {

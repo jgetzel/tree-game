@@ -65,6 +65,7 @@ pub enum SpriteEnum {
     Bug3,
     Bug4,
     TrashCan,
+    Shadow,
     DebugCircle
 }
 
@@ -180,6 +181,10 @@ pub fn load_assets(
     assets.map.insert(
         SpriteEnum::TrunkWalk6,
         asset_server.load("sprites/trunk/trunkjr6.png")
+    );
+    assets.map.insert(
+        SpriteEnum::Shadow,
+        asset_server.load("sprites/shadow.png")
     );
     assets.map.insert(
         SpriteEnum::DebugCircle,
