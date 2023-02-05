@@ -1,7 +1,8 @@
-use bevy::prelude::{Plugin, Component};
+use bevy::prelude::{Plugin, Component, Query, Res, Image, Handle};
+use bevy::time::Time;
 use bevy::{utils::HashMap, prelude::Resource};
 
-use crate::assets::SpriteEnum;
+use crate::assets::{SpriteEnum, GameAssets};
 use crate::assets::SpriteEnum::*;
 
 
@@ -9,11 +10,12 @@ pub struct AnimPlugin;
 
 impl Plugin for AnimPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
-        app.insert_resource(Animations::default());
+        app.insert_resource(Animations::default())
+        .add_system(animator_sys);
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Clone)]
 pub struct Animation {
     pub sprites: Vec<SpriteEnum>,
     pub framerate: f32,
@@ -57,17 +59,68 @@ impl Default for Animations {
 
 #[derive(Component)]
 pub struct Animator {
-    time: f32,
-    current_anim: Animation,
-    playing: bool,
-    current_frame: SpriteEnum,
+    pub time: f32,
+    pub current_anim: Animation,
+    pub playing: bool,
+    pub current_frame: usize,
 }
 
 impl Animator {
+    pub fn new(anim: Animation) -> Self {
+        Self {
+            time: 0.,
+            current_anim: anim,
+            playing: false,
+            current_frame: 0
+        }
+    }
+
     pub fn play_anim(&mut self, anim: Animation) {
         self.time = 0.;
         self.current_anim = anim;
         self.playing = true;
-        self.current_frame = anim.sprites[0];
+        self.current_frame = 0;
+    }
+
+    pub fn pause(&mut self) {
+        self.playing = false;
+    }
+
+    pub fn resume(&mut self) {
+        self.playing = true;
+    }
+
+    pub fn play_sprite(&mut self, sprite: SpriteEnum) {
+        self.playing = true;
+        self.current_anim = Animation {
+            sprites: vec![sprite],
+            framerate: 60.,
+            one_shot: true
+        };
+        self.time = 0.;
+        self.current_frame = 0;
+    }
+}
+
+pub fn animator_sys(
+    mut animators: Query<(&mut Animator, &mut Handle<Image>)>,
+    assets: Res<GameAssets>,
+    time: Res<Time>
+) {
+    for (mut animator, mut handle) in animators.iter_mut() {
+        if !animator.playing {
+            return;
+        }
+        let framerate = animator.current_anim.framerate;
+        let anim_length = animator.current_anim.sprites.len();
+        let time_per_frame = anim_length as f32 / framerate;
+        
+        if time_per_frame * (animator.current_frame as f32 + 1.) < animator.time {
+            animator.current_frame += 1;
+            animator.current_frame %= anim_length;
+            *handle = assets.get(animator.current_anim.sprites[animator.current_frame]);
+        }
+        
+        animator.time += time.delta_seconds();
     }
 }

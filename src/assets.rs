@@ -8,9 +8,15 @@ pub enum AppState {
     InGame,
 }
 
-#[derive(Default, Resource)]
+#[derive(Default, Resource, Clone)]
 pub struct GameAssets {
     pub map: HashMap<SpriteEnum, Handle<Image>>,
+}
+
+impl GameAssets {
+    pub fn get(&self, sprite: SpriteEnum) -> Handle<Image> {
+        self.map.get(&sprite).unwrap().clone()
+    }
 }
 
 pub struct AssetLoaderPlugin;
@@ -30,7 +36,7 @@ impl Plugin for AssetLoaderPlugin {
 #[derive(Default, Resource)]
 pub struct AssetsLoading(Vec<HandleUntyped>);
 
-#[derive(PartialEq, Eq, Hash)]
+#[derive(PartialEq, Eq, Hash, Copy, Clone)]
 pub enum SpriteEnum {
     TrunkJr,
     HouseFront,
