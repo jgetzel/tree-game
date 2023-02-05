@@ -18,6 +18,7 @@ mod init_systems;
 mod keyboard_input;
 mod player;
 mod utils;
+mod animations;
 
 fn main() {
     let mut app = App::new();

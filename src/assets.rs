@@ -40,7 +40,6 @@ pub enum SpriteEnum {
     HouseFrontTree2,
     HouseInside,
     LadyIdle,
-    PillBug,
     MouseyIdle1,
     MouseyIdle2,
     MouseyIdle3,
@@ -49,6 +48,10 @@ pub enum SpriteEnum {
     MouseyWalk3,
     MouseyWalk4,
     MouseyWalk5,
+    Bug1,
+    Bug2,
+    Bug3,
+    Bug4,
     DebugCircle
 }
 
@@ -90,10 +93,6 @@ pub fn load_assets(
         asset_server.load("sprites/lady_idle.png")
     );
     assets.map.insert(
-        SpriteEnum::PillBug,
-        asset_server.load("sprites/pill_bug.png")
-    );
-    assets.map.insert(
         SpriteEnum::MouseyWalk1,
         asset_server.load("sprites/mousey/mouseywalk1.png")
     );
@@ -124,6 +123,22 @@ pub fn load_assets(
     assets.map.insert(
         SpriteEnum::MouseyIdle3,
         asset_server.load("sprites/mousey/mousey_idle3.png")
+    );
+    assets.map.insert(
+        SpriteEnum::Bug1,
+        asset_server.load("sprites/bug/buggyboo1.png")
+    );
+    assets.map.insert(
+        SpriteEnum::Bug2,
+        asset_server.load("sprites/bug/buggyboo2.png")
+    );
+    assets.map.insert(
+        SpriteEnum::Bug3,
+        asset_server.load("sprites/bug/buggyboo3.png")
+    );
+    assets.map.insert(
+        SpriteEnum::Bug4,
+        asset_server.load("sprites/bug/buggyboo4.png")
     );
     assets.map.insert(
         SpriteEnum::DebugCircle,
