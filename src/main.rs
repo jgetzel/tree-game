@@ -1,6 +1,7 @@
 use crate::assets::AssetLoaderPlugin;
 use crate::init_systems::{EnvironmentInitPlugin, YOffset};
 use crate::keyboard_input::KeyboardInputPlugin;
+use animations::AnimPlugin;
 use bevy::app::PluginGroupBuilder;
 use bevy::prelude::*;
 use bevy_embedded_assets::EmbeddedAssetPlugin;
@@ -35,6 +36,7 @@ fn main() {
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.))
         .add_plugins(DebugPlugins)
         .add_plugin(AssetLoaderPlugin)
+        .add_plugin(AnimPlugin)
         .add_plugin(EnvironmentInitPlugin)
         .add_plugin(KeyboardInputPlugin);
 

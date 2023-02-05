@@ -58,6 +58,7 @@ pub enum SpriteEnum {
     Bug2,
     Bug3,
     Bug4,
+    TrashCan,
     DebugCircle
 }
 
@@ -145,6 +146,10 @@ pub fn load_assets(
     assets.map.insert(
         SpriteEnum::Bug4,
         asset_server.load("sprites/bug/buggyboo4.png")
+    );
+    assets.map.insert(
+        SpriteEnum::TrashCan,
+        asset_server.load("sprites/trash_can.png")
     );
     assets.map.insert(
         SpriteEnum::DebugCircle,

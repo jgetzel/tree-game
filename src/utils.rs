@@ -37,7 +37,7 @@ pub fn reinsert_colliders(
                         collider.clone(),
                         TransformBundle::from(Transform {
                             translation: Vec3::new(0., y_off.0, 0.) * p_trans.scale * 10.,
-                            scale: Vec3::new(3., 1., 1.),
+                            scale: Vec3::new(4., 1., 1.),
                             ..default()
                         }),
                         y_off,

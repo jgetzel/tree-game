@@ -80,7 +80,7 @@ fn init_player(mut commands: Commands, assets: Res<GameAssets>) {
             p.spawn(SpriteBundle {
                 texture: assets.map.get(&SpriteEnum::DebugCircle).unwrap().clone(),
                 transform: Transform {
-                    scale: Vec3::ONE * 0.5,
+                    scale: Vec3::ONE * 0.3,
                     translation: Vec3::new(0., 0., 1.),
                     ..default()
                 },
@@ -124,19 +124,27 @@ fn init_background(mut commands: Commands, assets: Res<GameAssets>) {
             );
             p.spawn(Collider::polyline(
                 vec![
-                    Vect::new(-716., 69.),
+                    Vect::new(-716., 33.),
                     Vect::new(-715., -256.),
                     Vect::new(713., -256.),
                     Vect::new(713., 69.),
+                    Vect::new(162., 28.),
+                    Vect::new(-255., 70.)
                 ],
-                Some(vec![[0, 1], [1, 2], [2, 3], [3, 0]]),
+                Some(vec![[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 0]]),
             ));
+            p.spawn(Collider::ball(200.))
+            .insert(TransformBundle::from(Transform {
+                translation: Vec3::new(561., -120., 0.) / HOUSE_FRONT_SCALE,
+                ..default()
+            })
+            );
         });
 
     commands.spawn(SpriteBundle {
         texture: assets.map.get(&SpriteEnum::HouseFrontBackground).unwrap().clone(),
         transform: Transform {
-            scale: Vec3::ONE * 0.13,
+            scale: Vec3::ONE * 0.14,
             translation: Vec3::new(0., 0., -501.),
             ..default()
         },
@@ -190,6 +198,18 @@ fn init_background(mut commands: Commands, assets: Res<GameAssets>) {
         })
         .insert(YOffset(9.7))
         .insert(AutoSortOnY);
+
+    commands
+        .spawn(SpriteBundle {
+            texture: assets.get(SpriteEnum::TrashCan),
+            transform: Transform {
+                translation: Vec3::new(561., -91., 0.),
+                scale: Vec3::ONE * HOUSE_FRONT_SCALE,
+                ..default()
+            },
+            ..default()
+        }).insert(AutoSortOnY)
+        .insert(YOffset(-25.));
 }
 
 fn init_camera(mut commands: Commands) {
