@@ -1,6 +1,6 @@
 use crate::assets::SpriteEnum::HouseFront;
 use crate::assets::{AppState, GameAssets, SpriteEnum};
-use crate::camera::MainCamera;
+use crate::camera::{MainCamera, CameraBounds};
 use crate::player::{Flippable, Player, TRUNK_FRICTION};
 use bevy::core_pipeline::clear_color::ClearColorConfig;
 use bevy::prelude::*;
@@ -208,6 +208,7 @@ fn init_camera(mut commands: Commands) {
             },
             ..default()
         },
+        CameraBounds(-714., 714.),
         MainCamera,
     ));
 }
