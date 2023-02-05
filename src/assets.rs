@@ -39,6 +39,12 @@ pub struct AssetsLoading(Vec<HandleUntyped>);
 #[derive(PartialEq, Eq, Hash, Copy, Clone)]
 pub enum SpriteEnum {
     TrunkJr,
+    TrunkWalk1,
+    TrunkWalk2,
+    TrunkWalk3,
+    TrunkWalk4,
+    TrunkWalk5,
+    TrunkWalk6,
     HouseFront,
     HouseFrontHouse,
     HouseFrontBackground,
@@ -150,6 +156,30 @@ pub fn load_assets(
     assets.map.insert(
         SpriteEnum::TrashCan,
         asset_server.load("sprites/trash_can.png")
+    );
+    assets.map.insert(
+        SpriteEnum::TrunkWalk1,
+        asset_server.load("sprites/trunk/trunkjr1.png")
+    );
+    assets.map.insert(
+        SpriteEnum::TrunkWalk2,
+        asset_server.load("sprites/trunk/trunkjr2.png")
+    );
+    assets.map.insert(
+        SpriteEnum::TrunkWalk3,
+        asset_server.load("sprites/trunk/trunkjr3.png")
+    );
+    assets.map.insert(
+        SpriteEnum::TrunkWalk4,
+        asset_server.load("sprites/trunk/trunkjr4.png")
+    );
+    assets.map.insert(
+        SpriteEnum::TrunkWalk5,
+        asset_server.load("sprites/trunk/trunkjr5.png")
+    );
+    assets.map.insert(
+        SpriteEnum::TrunkWalk6,
+        asset_server.load("sprites/trunk/trunkjr6.png")
     );
     assets.map.insert(
         SpriteEnum::DebugCircle,
