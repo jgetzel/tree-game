@@ -54,7 +54,7 @@ pub fn player_anim_controller(
 ) {
     for mut anim in query.iter_mut() {
         if input.movement.length() < DEADZONE {
-            anim.play_sprite(SpriteEnum::TrunkWalk1);
+            anim.play_anim(anims.get(AnimEnum::TrunkIdle));
         } else {
             anim.play_anim(anims.get(AnimEnum::TrunkWalk));
         }

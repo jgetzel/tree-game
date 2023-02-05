@@ -97,9 +97,9 @@ impl Default for Animations {
             Animation {
                 anim_enum: AnimEnum::TrunkIdle,
                 sprites: vec![
-                    TrunkIdle1, TrunkIdle2, TrunkIdle3, TrunkIdle2,
+                    TrunkIdle3, TrunkIdle1, TrunkIdle2, TrunkIdle1,
                 ],
-                framerate: 6.,
+                framerate: 3.,
                 one_shot: false,
             },
         );
