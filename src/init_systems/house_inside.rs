@@ -8,7 +8,7 @@ use crate::animations::AnimEnum::{MouseyIdle, MouseyWalk};
 use crate::assets::{GameAssets, SpriteEnum};
 use crate::assets::SpriteEnum::MouseyIdle1;
 use crate::camera::{CameraBounds, LockedCamera, MainCamera};
-use crate::init_systems::{AutoSortOnY, CAMERA_LAYER, CAMERA_SCALE, Mousey, YOffset};
+use crate::init_systems::{AutoSortOnY, CAMERA_LAYER, CAMERA_SCALE, Mousey, TRUNK_SCALE, YOffset};
 use crate::init_systems::environment::HOUSE_FRONT_SCALE;
 use crate::player::{Flippable, PlayerInteractor, TRUNK_FRICTION};
 use crate::utils::{BeginAnimPos, MOUSE_DOOR_HOP_TIME, MouseDoorHopAnimated, MouseDoorHopFinishAnim, MouseTrashAnimated, WalkingMouse};
@@ -49,7 +49,7 @@ pub fn init_background(
             texture: assets.get(SpriteEnum::RoomBirdDoor),
             ..default()
         }).insert(Transform::from_translation(
-            vec3(383., -783., 1.) / HOUSE_FRONT_SCALE));
+            vec3(383., 217., 1.) / HOUSE_FRONT_SCALE));
 
         p.spawn(SpriteBundle {
             texture: assets.get(SpriteEnum::RoomSlidingDoor),
@@ -71,6 +71,16 @@ pub fn init_background(
             vec2(-477., -1274.),
             vec2(-481., -1230.),
         ], None));
+    });
+
+    commands.spawn(SpriteBundle {
+        texture: assets.get(SpriteEnum::GirlIdle1),
+        transform: Transform {
+            translation: vec3(406., -1031., -501.),
+            scale: Vec3::ONE * 0.15,
+            ..default()
+        },
+        ..default()
     });
 
 }

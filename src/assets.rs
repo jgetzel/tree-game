@@ -74,6 +74,9 @@ pub enum SpriteEnum {
     MouseyWalk3,
     MouseyWalk4,
     MouseyWalk5,
+    GirlIdle1,
+    GirlIdle2,
+    GirlIdle3,
     Bug1,
     Bug2,
     Bug3,
@@ -226,6 +229,18 @@ pub fn load_assets(
     assets.sprites.insert(
         SpriteEnum::RoomBirdDoor,
         asset_server.load("sprites/Room_birddoor.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::GirlIdle1,
+        asset_server.load("sprites/girl_idle1.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::GirlIdle2,
+        asset_server.load("sprites/girl_idle2.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::GirlIdle3,
+        asset_server.load("sprites/girl_idle3.png"),
     );
     assets.sprites.insert(
         SpriteEnum::DebugCircle,
