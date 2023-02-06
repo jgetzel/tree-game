@@ -1,8 +1,8 @@
 use std::f32::consts::PI;
-use crate::init_systems::{AutoSizeOnY, AutoSortOnY, YOffset, TRUNK_SCALE, Mousey};
+use crate::init_systems::{AutoSizeOnY, AutoSortOnY, YOffset, TRUNK_SCALE, Mousey, LevelState};
 use bevy::hierarchy::{BuildChildren, Children};
 use bevy::math::{Vec2, Vec3};
-use bevy::prelude::{default, Commands, Entity, Query, Transform, TransformBundle, With, Without, Component, EventReader, Parent, Res};
+use bevy::prelude::{default, Commands, Entity, Query, Transform, TransformBundle, With, Without, Component, EventReader, Parent, Res, ResMut, State};
 use bevy::time::Time;
 use bevy_rapier2d::dynamics::{LockedAxes, RigidBody};
 use bevy_rapier2d::geometry::Collider;
@@ -10,6 +10,7 @@ use bevy_rapier2d::prelude::{ActiveEvents, Damping, Sensor, Velocity};
 use crate::animations::{Animations, Animator, AnimEnum};
 use crate::assets::{SpriteEnum};
 use crate::init_systems::environment::DoorInter;
+use crate::init_systems::LevelState::HouseInside;
 use crate::keyboard_input::PlayerInput;
 use crate::player::{DEADZONE, Flippable, InteractEvent, Player, PlayerInteractor, TRUNK_FRICTION};
 
@@ -151,7 +152,7 @@ pub fn mouse_idle_anim(
     }
 }
 
-pub const MOUSE_DOOR_HOP_TIME: f32 = 1.;
+pub const MOUSE_DOOR_HOP_TIME: f32 = 0.5;
 
 #[derive(Component)]
 pub struct MouseDoorHopAnimated(pub f32);
@@ -168,6 +169,7 @@ pub fn door_interact(
         let Ok(player) = players.get(ev.interactor) else { return; };
         commands.entity(player).remove::<Player>()
             .insert(Sensor)
+            .insert(YOffset(-200.))
             .insert(MouseDoorHopAnimated(0.));
     }
 }
@@ -176,17 +178,46 @@ pub fn mouse_door_anim_player(
     mut q: Query<(&mut MouseDoorHopAnimated, &mut Transform, Entity, Option<&BeginAnimPos>)>,
     time: Res<Time>,
     mut commands: Commands,
+    mut state: ResMut<State<LevelState>>
 ) {
     for (mut mouse, mut trans, entity, begin) in q.iter_mut() {
         let Some(begin) = begin else {
             commands.entity(entity).insert(BeginAnimPos(trans.translation.truncate()));
             continue;
         };
-        trans.translation.x = begin.0.x + (mouse.0 / MOUSE_DOOR_HOP_TIME) * 100.;
-        trans.translation.y = begin.0.y + mouse_door_hop_interp(mouse.0 / MOUSE_DOOR_HOP_TIME) * 150.;
+        trans.translation.x = begin.0.x + (mouse.0 / MOUSE_DOOR_HOP_TIME) * 40.;
+        trans.translation.y = begin.0.y + mouse_door_hop_interp(mouse.0 / (MOUSE_DOOR_HOP_TIME * 2.)) * 150.;
 
         if mouse.0 > MOUSE_DOOR_HOP_TIME {
             commands.entity(entity).remove::<MouseDoorHopAnimated>()
+                .remove::<BeginAnimPos>()
+                .insert(Player)
+                .remove::<Sensor>();
+            state.set(HouseInside).unwrap();
+            continue;
+        }
+        mouse.0 += time.delta_seconds();
+    }
+}
+
+#[derive(Component)]
+pub struct MouseDoorHopFinishAnim(pub f32);
+
+pub fn mouse_door_anim_finish(
+    mut q: Query<(&mut MouseDoorHopFinishAnim, &mut Transform, Entity, Option<&BeginAnimPos>)>,
+    time: Res<Time>,
+    mut commands: Commands,
+) {
+    for (mut mouse, mut trans, entity, begin) in q.iter_mut() {
+        let Some(begin) = begin else {
+            commands.entity(entity).insert(BeginAnimPos(trans.translation.truncate()));
+            continue;
+        };
+        trans.translation.x = begin.0.x + (mouse.0 / MOUSE_DOOR_HOP_TIME) * 40.;
+        trans.translation.y = begin.0.y - 200. + mouse_door_hop_interp((mouse.0 + MOUSE_DOOR_HOP_TIME) / (MOUSE_DOOR_HOP_TIME * 2.)) * 200.;
+
+        if mouse.0 > MOUSE_DOOR_HOP_TIME {
+            commands.entity(entity).remove::<MouseDoorHopFinishAnim>()
                 .remove::<BeginAnimPos>()
                 .insert(Player)
                 .remove::<Sensor>();

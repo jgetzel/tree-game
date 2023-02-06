@@ -57,6 +57,14 @@ pub enum SpriteEnum {
     HouseFrontTree1,
     HouseFrontTree2,
     HouseInside,
+    RoomBackground,
+    RoomBackground2,
+    RoomFurniture1,
+    RoomFurniture2,
+    RoomFurniture3,
+    RoomSlidingDoor,
+    RoomDoor,
+    RoomBirdDoor,
     LadyIdle,
     MouseyIdle1,
     MouseyIdle2,
@@ -186,6 +194,38 @@ pub fn load_assets(
     assets.sprites.insert(
         SpriteEnum::TrunkIdle3,
         asset_server.load("sprites/trunk/jr_idle3.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::RoomBackground,
+        asset_server.load("sprites/room_background.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::RoomBackground2,
+        asset_server.load("sprites/room_background2.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::RoomFurniture1,
+        asset_server.load("sprites/room_furniture1.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::RoomFurniture2,
+        asset_server.load("sprites/room_furniture2.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::RoomFurniture3,
+        asset_server.load("sprites/room_furniture3.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::RoomSlidingDoor,
+        asset_server.load("sprites/room_slidingdoor.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::RoomDoor,
+        asset_server.load("sprites/room_door.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::RoomBirdDoor,
+        asset_server.load("sprites/Room_birddoor.png"),
     );
     assets.sprites.insert(
         SpriteEnum::DebugCircle,

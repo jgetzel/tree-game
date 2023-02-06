@@ -1,15 +1,18 @@
 pub mod environment;
+pub mod house_inside;
 
-use crate::animations::{Animations, Animator, AnimEnum};
+use crate::animations::{Animation, Animations, Animator, AnimEnum};
 use crate::assets::{AppState, GameAssets, SpriteEnum};
 use crate::camera::{CameraBounds, MainCamera};
 use crate::player::{Flippable, Player, PlayerInteractor, Trunk, TRUNK_FRICTION};
 use bevy::core_pipeline::clear_color::ClearColorConfig;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
+use crate::animations::AnimEnum::MouseyIdle;
 use crate::assets::SpriteEnum::MouseyIdle1;
 use crate::init_systems::environment::init_door;
-use crate::utils::Interactable;
+use crate::init_systems::LevelState::{HouseFront, HouseInside};
+use crate::utils::{Interactable, mouse_door_anim_finish};
 
 const TRUNK_COLLIDER_RADIUS: f32 = 150.;
 const TRUNK_COLLIDER_Y_OFFSET: f32 = -100.;
@@ -18,6 +21,13 @@ pub const TRUNK_SCALE: f32 = 0.075;
 
 const CAMERA_LAYER: f32 = 100.;
 const CAMERA_SCALE: f32 = 0.5;
+
+#[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
+pub enum LevelState {
+    HouseFront,
+    HouseInside,
+    HouseBack,
+}
 
 pub struct EnvironmentInitPlugin;
 
@@ -31,6 +41,18 @@ impl Plugin for EnvironmentInitPlugin {
                 .with_system(environment::init_background)
                 .with_system(init_door)
                 .with_system(environment::init_music)
+        );
+        app.add_state(LevelState::HouseFront);
+
+        app.add_system_set(
+            SystemSet::on_enter(HouseInside)
+                .with_system(house_inside::init_background)
+                .with_system(house_inside::init_camera)
+                .with_system(house_inside::init_mousey)
+        );
+        app.add_system_set(
+            SystemSet::on_update(HouseInside)
+                .with_system(mouse_door_anim_finish)
         );
 
         if app.is_plugin_added::<RapierPhysicsPlugin>() {
@@ -141,6 +163,7 @@ pub struct Mousey;
 fn init_mousey(
     mut commands: Commands,
     assets: Res<GameAssets>,
+    mut anims: Res<Animations>
 ) {
     commands.spawn(
         SpriteBundle {
@@ -151,10 +174,11 @@ fn init_mousey(
                 ..default()
             },
             ..default()
-        }
+        },
     ).insert(AutoSortOnY)
         .insert(YOffset(-65.))
         .insert(Mousey)
+        .insert(Animator::new(anims.get(MouseyIdle)))
         .with_children(|p| {
             p.spawn(Collider::ball(100.))
                 .insert(TransformBundle::from(Transform::default()))

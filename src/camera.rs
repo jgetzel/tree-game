@@ -34,7 +34,6 @@ pub fn camera_follow(
         else { return; };
     let Ok(player_trans) = player_q.get_single()
         else { return; };
-
     cam_trans.translation.x = cam_trans.translation.x.lerp(
         player_trans.translation.x,
         time.delta_seconds() * CAMERA_SMOOTHING,
