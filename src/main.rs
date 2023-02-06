@@ -13,7 +13,7 @@ use crate::camera::camera_follow;
 use crate::player::{interact_col_event_sys, flip_flippables, flip_interactor, move_player, InteractEvent, interact_events_pt2};
 use player::player_anim_controller;
 use utils::{auto_sort_on_y, reinsert_colliders, update_size_on_y};
-use crate::utils::{door_interact, mouse_door_anim_player, mouse_idle_anim, mouse_trash_animator, mouse_walk_anim, mousey_interact};
+use crate::utils::{attack_system, door_interact, mouse_door_anim_player, mouse_idle_anim, mouse_trash_animator, mouse_walk_anim, mousey_interact};
 
 mod animations;
 mod assets;
@@ -47,6 +47,7 @@ fn main() {
 
     app.add_system(move_player)
         .add_system(player_anim_controller)
+        .add_system(attack_system)
         .add_system(mouse_walk_anim)
         .add_system(mouse_idle_anim)
         .add_system(camera_follow)

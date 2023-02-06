@@ -8,6 +8,7 @@ use bevy_rapier2d::dynamics::{LockedAxes, RigidBody};
 use bevy_rapier2d::geometry::Collider;
 use bevy_rapier2d::prelude::{ActiveEvents, Damping, Sensor, Velocity};
 use crate::animations::{Animations, Animator, AnimEnum};
+use crate::animations::AnimEnum::TrunkAttack;
 use crate::assets::{SpriteEnum};
 use crate::init_systems::environment::DoorInter;
 use crate::init_systems::LevelState::HouseInside;
@@ -66,23 +67,37 @@ pub const MOUSE_TRASH_ANIM_TIME: f32 = 1.;
 #[derive(Component)]
 pub struct MouseTrashAnimated(pub f32);
 
+#[derive(Component)]
+pub struct TrunkAttacking(pub Entity);
+
 pub fn mousey_interact(
     mut ev: EventReader<InteractEvent>,
     mut q: Query<&Parent, (With<Mousey>, With<Interactable>)>,
-    mut player: Query<Entity, With<Player>>,
+    mut player: Query<(Entity, &mut Animator), With<Player>>,
     mut commands: Commands,
+    anims: Res<Animations>
 ) {
     for ev in ev.iter() {
         let Ok(parent) = q.get(ev.interactable) else { return; };
-        for player in player.iter() {
-            commands.entity(player).remove::<Player>();
+        for (player, mut animator) in player.iter_mut() {
+            commands.entity(player).remove::<Player>()
+                .insert(TrunkAttacking(parent.get()));
+            animator.play_anim(anims.get(AnimEnum::TrunkAttack));
         }
-
-        commands.entity(parent.get())
-            .insert(MouseTrashAnimated(0.));
     }
 }
 
+pub fn attack_system(
+    mut q: Query<(Entity, &mut Animator, &TrunkAttacking)>,
+    mut commands: Commands
+) {
+    for (ent, mut anim, trunk) in q.iter_mut() {
+        if !anim.playing && anim.current_anim.anim_enum == TrunkAttack {
+            commands.entity(ent).remove::<TrunkAttacking>();
+            commands.entity(trunk.0).insert(MouseTrashAnimated(0.));
+        }
+    }
+}
 #[derive(Component)]
 pub struct BeginAnimPos(pub Vec2);
 

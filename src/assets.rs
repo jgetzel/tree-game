@@ -51,6 +51,12 @@ pub enum SpriteEnum {
     TrunkWalk1,
     TrunkWalk2,
     TrunkWalk3,
+    TrunkAttack1,
+    TrunkAttack2,
+    TrunkAttack3,
+    TrunkAttack4,
+    TrunkAttack5,
+    TrunkAttack6,
     HouseFront,
     HouseFrontHouse,
     HouseFrontBackground,
@@ -241,6 +247,30 @@ pub fn load_assets(
     assets.sprites.insert(
         SpriteEnum::GirlIdle3,
         asset_server.load("sprites/girl_idle3.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::TrunkAttack1,
+        asset_server.load("sprites/jr_standardattack1.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::TrunkAttack2,
+        asset_server.load("sprites/jr_standardattack2.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::TrunkAttack3,
+        asset_server.load("sprites/jr_standardattack3.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::TrunkAttack4,
+        asset_server.load("sprites/jr_standardattack4.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::TrunkAttack5,
+        asset_server.load("sprites/jr_standardattack5.png"),
+    );
+    assets.sprites.insert(
+        SpriteEnum::TrunkAttack6,
+        asset_server.load("sprites/jr_standardattack6.png"),
     );
     assets.sprites.insert(
         SpriteEnum::DebugCircle,

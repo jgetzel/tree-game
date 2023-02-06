@@ -7,6 +7,7 @@ use crate::{
 use bevy::prelude::*;
 use bevy_rapier2d::geometry::Collider;
 use bevy_rapier2d::prelude::{CollisionEvent, Sensor, Velocity};
+use crate::animations::AnimEnum::TrunkAttack;
 use crate::utils::Interactable;
 
 pub const TRUNK_ACCEL: f32 = 4000.;
@@ -90,7 +91,10 @@ pub fn player_anim_controller(
         if input.movement.length() > DEADZONE && player.is_some() {
             anim.play_anim(anims.get(AnimEnum::TrunkWalk));
         } else {
-            anim.play_anim(anims.get(AnimEnum::TrunkIdle));
+            let attacking = anim.current_anim.anim_enum == TrunkAttack && anim.playing;
+            if !attacking {
+                anim.play_anim(anims.get(AnimEnum::TrunkIdle));
+            }
         }
     }
 }

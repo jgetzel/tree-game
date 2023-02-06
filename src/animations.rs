@@ -31,6 +31,7 @@ pub enum AnimEnum {
     BugWalk,
     TrunkWalk,
     TrunkIdle,
+    TrunkAttack,
     StaticSprite,
 }
 
@@ -103,6 +104,15 @@ impl Default for Animations {
                 one_shot: false,
             },
         );
+        map.insert(AnimEnum::TrunkAttack,
+        Animation {
+            anim_enum: AnimEnum::TrunkAttack,
+            sprites: vec![
+                TrunkAttack1, TrunkAttack2, TrunkAttack3, TrunkAttack4, TrunkAttack5, TrunkAttack6
+            ],
+            framerate: 9.,
+            one_shot: true
+        });
 
         Self { map }
     }
@@ -176,6 +186,9 @@ pub fn animator_sys(
         let time_to_next_sprite = time_per_frame * (animator.current_frame as f32 + 1.);
         if time_to_next_sprite < animator.time {
             animator.current_frame += 1;
+            if animator.current_anim.one_shot && animator.current_frame == anim_length {
+                animator.playing = false;
+            }
             animator.current_frame %= anim_length;
             if animator.current_frame == 0 {
                 animator.time %= time_per_frame * anim_length as f32;
